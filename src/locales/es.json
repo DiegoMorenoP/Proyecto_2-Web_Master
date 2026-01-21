@@ -1,0 +1,41 @@
+{
+    "common": {
+        "loading": "Cargando...",
+        "addToCart": "Añadir al carrito",
+        "viewAll": "Ver todos los productos",
+        "popular": "Más Vendido",
+        "onlyLeft": "Solo quedan {{count}} en stock",
+        "soldOut": "Agotado",
+        "select": "Seleccionar",
+        "language": "Idioma",
+        "power": "Potencia",
+        "savings": "Ahorro",
+        "viewDetails": "Ver Detalles"
+    },
+    "nav": {
+        "home": "Inicio",
+        "products": "Productos",
+        "calculator": "Calculadora",
+        "installers": "Instaladores"
+    },
+    "hero": {
+        "title": "Toma el control de tu <1>energía</1>",
+        "subtitle": "Calcula tu ahorro en tiempo real y descubre el kit solar perfecto para tu hogar. Sin complicaciones técnicas."
+    },
+    "sections": {
+        "featuredKits": "Kits Destacados",
+        "whyChooseUs": "Por qué elegirnos",
+        "guarantee": {
+            "title": "Garantía de 25 años",
+            "desc": "En todos los paneles solares aseguran tu inversión."
+        },
+        "installation": {
+            "title": "Instalación Simplificada",
+            "desc": "Diseñado para que puedas instalarlo tú mismo o con ayuda básica."
+        },
+        "support": {
+            "title": "Soporte Técnico 24/7",
+            "desc": "Expertos ingenieros a tu disposición en cualquier momento."
+        }
+    }
+}
