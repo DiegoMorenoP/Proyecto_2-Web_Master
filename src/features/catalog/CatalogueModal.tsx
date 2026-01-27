@@ -34,6 +34,9 @@ export function CatalogueModal({ isOpen, onClose, kits }: CatalogueModalProps) {
     }, [isOpen]);
 
     // Filter and Sort Logic
+    // Filter and Sort Logic
+    const [showOnlyInStock, setShowOnlyInStock] = useState(false);
+
     const filteredKits = useMemo(() => {
         let result = [...kits];
 
@@ -51,7 +54,12 @@ export function CatalogueModal({ isOpen, onClose, kits }: CatalogueModalProps) {
             result = result.filter(k => k.type === selectedType);
         }
 
-        // 3. Sorting
+        // 3. Stock Filter
+        if (showOnlyInStock) {
+            result = result.filter(k => (k.stock ?? 0) > 0);
+        }
+
+        // 4. Sorting
         result.sort((a, b) => {
             if (sortOrder === 'price_asc') return a.price - b.price;
             if (sortOrder === 'price_desc') return b.price - a.price;
@@ -60,7 +68,7 @@ export function CatalogueModal({ isOpen, onClose, kits }: CatalogueModalProps) {
         });
 
         return result;
-    }, [kits, searchTerm, selectedType, sortOrder]);
+    }, [kits, searchTerm, selectedType, sortOrder, showOnlyInStock]);
 
     // Expansion Logic
     const [expandedProductId, setExpandedProductId] = useState<string | null>(null);
@@ -240,6 +248,19 @@ export function CatalogueModal({ isOpen, onClose, kits }: CatalogueModalProps) {
                                         </div>
 
                                         <div className="flex items-center gap-3 w-full md:w-auto overflow-x-auto pb-2 md:pb-0">
+
+                                            {/* Stock Filter Toggle */}
+                                            <button
+                                                onClick={() => setShowOnlyInStock(!showOnlyInStock)}
+                                                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all border ${showOnlyInStock
+                                                        ? 'bg-emerald-500/10 border-emerald-500/50 text-emerald-500'
+                                                        : 'bg-black/40 border-white/10 text-slate-400 hover:border-white/20 hover:text-white'
+                                                    }`}
+                                            >
+                                                <div className={`w-2 h-2 rounded-full ${showOnlyInStock ? 'bg-emerald-500' : 'bg-slate-500'}`} />
+                                                En Stock
+                                            </button>
+
                                             <div className="flex p-1 bg-black/40 rounded-xl border border-white/5">
                                                 {tabs.map(tab => (
                                                     <button
