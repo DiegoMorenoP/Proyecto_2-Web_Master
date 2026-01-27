@@ -173,7 +173,7 @@ export function ProductDetailModal({ isOpen, onClose, product, onAddToCart }: Pr
                                     }}
                                 >
                                     <ShoppingCart className="w-5 h-5" />
-                                    {product.stock_status === 'out_of_stock' ? t('common.outOfStock') : `${t('common.addToCart')} - ${Number(product.price).toLocaleString()}€`}
+                                    {product.stock_status === 'out_of_stock' ? t('common.outOfStock') : t('common.addToCart')}
                                 </Button>
                                 <Button
                                     variant="outline"
