@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { useState } from 'react';
 import { ShoppingCart, Check, Zap, Battery, Home, Info, X } from 'lucide-react';
 import type { Kit } from '../../types';
 import { Button } from '../../components/common/Button';
@@ -12,6 +13,7 @@ interface ProductDetailInlineProps {
 
 export function ProductDetailInline({ product, onClose, onAddToCart }: ProductDetailInlineProps) {
     const { t } = useTranslation();
+    const [imgError, setImgError] = useState(false);
 
     return (
         <motion.div
@@ -36,15 +38,24 @@ export function ProductDetailInline({ product, onClose, onAddToCart }: ProductDe
                 {/* Left Column: Image & Quick Specs */}
                 <div className="w-full md:w-1/3 space-y-6">
                     <div className="aspect-video md:aspect-square rounded-2xl overflow-hidden bg-black/40 border border-white/5 relative">
-                        {product.image_url ? (
+                        {(product.image_url && !imgError) ? (
                             <img
                                 src={product.image_url}
                                 alt={product.name}
                                 className="w-full h-full object-cover"
+                                onError={() => setImgError(true)}
                             />
                         ) : (
-                            <div className="w-full h-full flex items-center justify-center">
-                                <Zap className="w-16 h-16 text-slate-700" />
+                            <div className="w-full h-full relative">
+                                <img
+                                    src="https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=800&q=80"
+                                    alt="Solar Pattern"
+                                    className="w-full h-full object-cover opacity-50 grayscale"
+                                />
+                                <div className="absolute inset-0 bg-secondary/30 mix-blend-overlay" />
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                    <Zap className="w-16 h-16 text-white/50" />
+                                </div>
                             </div>
                         )}
                     </div>
@@ -60,6 +71,11 @@ export function ProductDetailInline({ product, onClose, onAddToCart }: ProductDe
                             <span className="text-primary font-medium text-sm">
                                 {product.total_power} kW System
                             </span>
+                            {(product.stock === 0 || product.stock === undefined) && (
+                                <span className="px-2 py-1 bg-red-500/10 text-red-500 text-xs font-bold rounded-full border border-red-500/20">
+                                    {t('common.outOfStock')}
+                                </span>
+                            )}
                         </div>
                         <h3 className="text-3xl font-bold text-white mb-2">{product.name}</h3>
                         <p className="text-slate-400 leading-relaxed">
@@ -130,9 +146,11 @@ export function ProductDetailInline({ product, onClose, onAddToCart }: ProductDe
                             size="lg"
                             className="w-full sm:w-auto min-w-[200px] gap-2 shadow-lg shadow-primary/20"
                             onClick={() => onAddToCart(product)}
+                            disabled={product.stock !== undefined && product.stock === 0}
+                            variant={product.stock !== undefined && product.stock === 0 ? 'secondary' : 'primary'}
                         >
                             <ShoppingCart className="w-5 h-5" />
-                            {t('common.addToCart')}
+                            {product.stock !== undefined && product.stock === 0 ? t('common.outOfStock') : t('common.addToCart')}
                         </Button>
                     </div>
                 </div>
