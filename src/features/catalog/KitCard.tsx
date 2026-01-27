@@ -1,4 +1,5 @@
 import { LucideZap } from 'lucide-react';
+import { useState } from 'react';
 import { Card } from '../../components/common/Card';
 import { Button } from '../../components/common/Button';
 import { Badge } from '../../components/common/Badge';
@@ -13,6 +14,8 @@ interface KitCardProps {
 }
 
 export function KitCard({ kit, onViewDetails, compact = false }: KitCardProps) {
+    const [imgError, setImgError] = useState(false);
+
     return (
         <Card
             variant="interactive"
@@ -22,13 +25,14 @@ export function KitCard({ kit, onViewDetails, compact = false }: KitCardProps) {
         >
             {/* Full Height Background Image */}
             <div className="absolute inset-0 z-0">
-                {(kit.image_url && kit.image_url !== '') ? (
+                {(kit.image_url && kit.image_url !== '' && !imgError) ? (
                     <motion.img
                         layout
                         src={kit.image_url}
                         alt={kit.name}
                         className={`w-full h-full object-cover transition-transform duration-1000 ease-in-out ${compact ? 'scale-100' : 'group-hover:scale-110'}`}
                         loading="lazy"
+                        onError={() => setImgError(true)}
                     />
                 ) : (
                     <div className="w-full h-full bg-slate-900 flex items-center justify-center relative">
