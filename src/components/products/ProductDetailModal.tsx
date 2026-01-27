@@ -58,8 +58,8 @@ export function ProductDetailModal({ isOpen, onClose, product, onAddToCart }: Pr
                                 <img
                                     src={product.image_url}
                                     alt={product.name}
-                                    referrerPolicy="no-referrer"
                                     className={`w-full h-full object-cover ${isOutOfStock ? 'grayscale opacity-75' : ''}`}
+                                    loading="lazy"
                                     onError={() => setImgError(true)}
                                 />
                             ) : (

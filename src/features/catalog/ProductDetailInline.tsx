@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ShoppingCart, Check, Zap, Battery, Home, Info, X } from 'lucide-react';
 import type { Kit } from '../../types';
 import { Button } from '../../components/common/Button';
@@ -15,6 +15,11 @@ export function ProductDetailInline({ product, onClose, onAddToCart }: ProductDe
     const { t } = useTranslation();
     const [imgError, setImgError] = useState(false);
     const isOutOfStock = product.stock_status === 'out_of_stock' || (product.stock !== undefined && product.stock <= 0);
+
+    // Reset error state when product changes to prevent stale errors
+    useEffect(() => {
+        setImgError(false);
+    }, [product]);
 
     return (
         <motion.div
@@ -40,11 +45,12 @@ export function ProductDetailInline({ product, onClose, onAddToCart }: ProductDe
                 <div className="w-full md:w-1/3 space-y-6">
                     <div className="aspect-video md:aspect-square rounded-2xl overflow-hidden bg-black/40 border border-white/5 relative">
                         {(product.image_url && !imgError) ? (
-                            <img
+                            <motion.img
+                                layout
                                 src={product.image_url}
                                 alt={product.name}
-                                referrerPolicy="no-referrer"
                                 className={`w-full h-full object-cover ${isOutOfStock ? 'grayscale opacity-75' : ''}`}
+                                loading="lazy"
                                 onError={() => setImgError(true)}
                             />
                         ) : (
