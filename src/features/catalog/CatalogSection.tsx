@@ -66,7 +66,7 @@ export function CatalogSection() {
             ) : (
                 <BentoGrid className="grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-auto">
                     <AnimatePresence mode="popLayout">
-                        {kits.filter(k => k.stock_status !== 'out_of_stock').slice(0, visibleCount).map((kit) => (
+                        {kits.slice(0, visibleCount).map((kit) => (
                             <motion.div
                                 key={kit.id}
                                 layout

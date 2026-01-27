@@ -15,6 +15,7 @@ interface KitCardProps {
 
 export function KitCard({ kit, onViewDetails, compact = false }: KitCardProps) {
     const [imgError, setImgError] = useState(false);
+    const isOutOfStock = kit.stock_status === 'out_of_stock' || (kit.stock !== undefined && kit.stock <= 0);
 
     return (
         <Card
@@ -30,7 +31,7 @@ export function KitCard({ kit, onViewDetails, compact = false }: KitCardProps) {
                         layout
                         src={kit.image_url}
                         alt={kit.name}
-                        className={`w-full h-full object-cover transition-transform duration-1000 ease-in-out ${compact ? 'scale-100' : 'group-hover:scale-110'}`}
+                        className={`w-full h-full object-cover transition-transform duration-1000 ease-in-out ${compact ? 'scale-100' : 'group-hover:scale-110'} ${isOutOfStock ? 'grayscale opacity-75' : ''}`}
                         loading="lazy"
                         onError={() => setImgError(true)}
                     />
@@ -40,7 +41,7 @@ export function KitCard({ kit, onViewDetails, compact = false }: KitCardProps) {
                         <img
                             src="https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=800&q=80"
                             alt="Solar Pattern"
-                            className={`w-full h-full object-cover opacity-50 grayscale transition-transform duration-1000 ease-in-out ${compact ? 'scale-100' : 'group-hover:scale-110'}`}
+                            className={`w-full h-full object-cover opacity-50 transition-transform duration-1000 ease-in-out ${compact ? 'scale-100' : 'group-hover:scale-110'} ${isOutOfStock ? 'grayscale' : ''}`}
                         />
                         <div className="absolute inset-0 bg-blue-900/20 mix-blend-overlay" />
                     </div>
@@ -58,7 +59,7 @@ export function KitCard({ kit, onViewDetails, compact = false }: KitCardProps) {
                             {kit.type.toUpperCase()}
                         </Badge>
                         {/* Stock Status Badge */}
-                        {(kit.stock_status === 'out_of_stock' || (kit.stock !== undefined && kit.stock <= 0)) && (
+                        {isOutOfStock && (
                             <Badge variant="destructive" className="backdrop-blur-xl bg-red-500/20 border-red-500/50 text-red-500 px-3 py-1 text-[10px] font-bold tracking-wider shadow-lg">
                                 AGOTADO
                             </Badge>

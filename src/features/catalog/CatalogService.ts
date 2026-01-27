@@ -53,16 +53,29 @@ export const CatalogService = {
             return MOCK_KITS;
         }
 
+        console.log('Raw DB Kits:', data);
+
         return data.map((kit: any) => {
-            const stock = kit.stock ?? 0;
+            // Force stock to be a number. Handle strings, nulls, undefined.
+            const rawStock = kit.stock;
+            const stock = typeof rawStock === 'string' ? parseInt(rawStock, 10) : (rawStock ?? 0);
+
+            // Validate parsed stock
+            const finalStock = isNaN(stock) ? 0 : stock;
+
             let status: 'in_stock' | 'low_stock' | 'out_of_stock' = 'in_stock';
 
-            if (stock <= 0) status = 'out_of_stock';
-            else if (stock <= 5) status = 'low_stock';
+            if (finalStock <= 0) {
+                status = 'out_of_stock';
+            } else if (finalStock <= 5) {
+                status = 'low_stock';
+            }
+
+            // console.log(`Processed Kit: ${kit.name} | Raw Stock: ${rawStock} | Final Stock: ${finalStock} | Status: ${status}`);
 
             return {
                 ...kit,
-                stock, // Ensure stock is always defined
+                stock: finalStock,
                 stock_status: status
             };
         }) as Kit[];
