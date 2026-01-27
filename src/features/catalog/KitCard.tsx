@@ -22,7 +22,7 @@ export function KitCard({ kit, onViewDetails, compact = false }: KitCardProps) {
         >
             {/* Full Height Background Image */}
             <div className="absolute inset-0 z-0">
-                {kit.image_url ? (
+                {(kit.image_url && kit.image_url !== '') ? (
                     <motion.img
                         layout
                         src={kit.image_url}
@@ -31,8 +31,14 @@ export function KitCard({ kit, onViewDetails, compact = false }: KitCardProps) {
                         loading="lazy"
                     />
                 ) : (
-                    <div className="w-full h-full bg-slate-900 flex items-center justify-center">
-                        <LucideZap className="w-20 h-20 text-slate-700" />
+                    <div className="w-full h-full bg-slate-900 flex items-center justify-center relative">
+                        {/* Fallback pattern */}
+                        <img
+                            src="https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=800&q=80"
+                            alt="Solar Pattern"
+                            className={`w-full h-full object-cover opacity-50 grayscale transition-transform duration-1000 ease-in-out ${compact ? 'scale-100' : 'group-hover:scale-110'}`}
+                        />
+                        <div className="absolute inset-0 bg-blue-900/20 mix-blend-overlay" />
                     </div>
                 )}
                 {/* Refined Gradient: lighter at top, darker at bottom for text */}
