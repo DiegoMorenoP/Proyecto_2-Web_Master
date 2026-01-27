@@ -43,6 +43,7 @@ export function ProductDetailInline({ product, onClose, onAddToCart }: ProductDe
                             <img
                                 src={product.image_url}
                                 alt={product.name}
+                                referrerPolicy="no-referrer"
                                 className={`w-full h-full object-cover ${isOutOfStock ? 'grayscale opacity-75' : ''}`}
                                 onError={() => setImgError(true)}
                             />
