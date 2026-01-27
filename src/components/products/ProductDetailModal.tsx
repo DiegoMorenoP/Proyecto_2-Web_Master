@@ -26,7 +26,7 @@ export function ProductDetailModal({ isOpen, onClose, product, onAddToCart }: Pr
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={onClose}
-                        className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm"
+                        className="fixed inset-0 z-[10050] bg-black/60 backdrop-blur-sm"
                     />
 
                     {/* Modal */}
@@ -34,7 +34,7 @@ export function ProductDetailModal({ isOpen, onClose, product, onAddToCart }: Pr
                         initial={{ opacity: 0, scale: 0.95, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                        className="fixed z-[70] left-4 right-4 top-4 bottom-4 md:left-10 md:right-10 md:top-10 md:bottom-10 lg:left-[10%] lg:right-[10%] lg:top-[5%] lg:bottom-[5%] bg-background rounded-3xl shadow-2xl overflow-hidden border border-white/10 flex flex-col md:flex-row max-w-7xl mx-auto"
+                        className="fixed z-[10060] left-4 right-4 top-4 bottom-4 md:left-10 md:right-10 md:top-10 md:bottom-10 lg:left-[10%] lg:right-[10%] lg:top-[5%] lg:bottom-[5%] bg-background rounded-3xl shadow-2xl overflow-hidden border border-white/10 flex flex-col md:flex-row max-w-7xl mx-auto"
                     >
                         {/* Close Button */}
                         <button

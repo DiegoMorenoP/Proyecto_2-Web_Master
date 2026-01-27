@@ -4,67 +4,112 @@ import { Button } from '../../components/common/Button';
 import { Badge } from '../../components/common/Badge';
 import type { Kit } from '../../types';
 import { formatCurrency } from '../../lib/utils';
+import { motion } from 'framer-motion';
 
 interface KitCardProps {
     kit: Kit;
+    compact?: boolean;
     onViewDetails?: () => void;
 }
 
-export function KitCard({ kit, onViewDetails }: KitCardProps) {
+export function KitCard({ kit, onViewDetails, compact = false }: KitCardProps) {
     return (
-        <Card variant="interactive" className="h-full flex flex-col group relative overflow-hidden">
-            {/* Glow Effect */}
-            <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-            <div className="relative z-10 flex flex-col h-full">
-                {/* Header */}
-                <div className="flex justify-between items-start mb-4">
-                    <Badge variant={kit.type === 'hybrid' ? 'success' : 'default'}>
-                        {kit.type.toUpperCase()}
-                    </Badge>
-                    <div className="flex items-center text-slate-400 text-sm">
-                        <LucideZap className="w-4 h-4 mr-1 text-primary" />
-                        {kit.total_power} kW
+        <Card
+            variant="interactive"
+            layout
+            className={`h-full flex flex-col group relative overflow-hidden cursor-pointer border-0 shadow-2xl transition-all duration-700 ease-[cubic-bezier(0.25,0.1,0.25,1)] ${compact ? 'rounded-3xl' : 'rounded-[2rem]'}`}
+            onClick={onViewDetails}
+        >
+            {/* Full Height Background Image */}
+            <div className="absolute inset-0 z-0">
+                {kit.image_url ? (
+                    <motion.img
+                        layout
+                        src={kit.image_url}
+                        alt={kit.name}
+                        className={`w-full h-full object-cover transition-transform duration-1000 ease-[cubic-bezier(0.25,0.1,0.25,1)] ${compact ? 'scale-100' : 'group-hover:scale-110'}`}
+                        loading="lazy"
+                    />
+                ) : (
+                    <div className="w-full h-full bg-slate-900 flex items-center justify-center">
+                        <LucideZap className="w-20 h-20 text-slate-700" />
                     </div>
-                </div>
-
-                {/* Content */}
-                <div className="mb-6 flex-1">
-                    <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">
-                        {kit.name}
-                    </h3>
-                    <p className="text-slate-400 text-sm line-clamp-2">
-                        {kit.description}
-                    </p>
-                </div>
-
-                {/* Image Placeholder */}
-                <div className="w-full h-32 bg-slate-800/50 rounded-xl mb-6 flex items-center justify-center border border-white/5">
-                    {/* Ideally uses kit.image_url */}
-                    <LucideZap className="w-10 h-10 text-slate-600" />
-                </div>
-
-                {/* Footer / Price */}
-                <div className="mt-auto">
-                    <div className="flex items-baseline gap-1 mb-1">
-                        <span className="text-2xl font-bold text-white">
-                            {formatCurrency(kit.monthly_finance_cost)}
-                        </span>
-                        <span className="text-sm text-slate-400">/mo</span>
-                    </div>
-                    <div className="text-xs text-slate-500 mb-4">
-                        or {formatCurrency(kit.price)} cash
-                    </div>
-
-                    <Button
-                        variant="outline"
-                        className="w-full group-hover:bg-primary group-hover:text-secondary group-hover:border-primary transition-all"
-                        onClick={onViewDetails}
-                    >
-                        View Details
-                    </Button>
-                </div>
+                )}
+                {/* Refined Gradient: lighter at top, darker at bottom for text */}
+                <div className={`absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent transition-opacity duration-500 ${compact ? 'opacity-80' : 'opacity-60 group-hover:opacity-80'}`} />
             </div>
+
+            {/* Content */}
+            <motion.div layout className={`relative z-10 flex flex-col h-full ${compact ? 'p-4' : 'p-6'}`}>
+                {/* Floating Badge */}
+                {!compact && (
+                    <div className="flex justify-between items-start">
+                        <Badge variant={kit.type === 'hybrid' ? 'success' : 'default'} className="backdrop-blur-xl bg-white/10 border-white/20 text-white px-4 py-1.5 text-xs font-bold tracking-wider shadow-lg">
+                            {kit.type.toUpperCase()}
+                        </Badge>
+                    </div>
+                )}
+
+                {/* Vertical Spacer */}
+                <div className="flex-1" />
+
+                {/* Bottom Info Panel */}
+                <motion.div layout className={`transform transition-transform duration-700 ease-[cubic-bezier(0.25,0.1,0.25,1)] ${compact ? 'translate-y-0' : 'translate-y-4 group-hover:translate-y-0'}`}>
+                    {/* Power Spec */}
+                    {!compact && (
+                        <div className="flex items-center gap-2 mb-3">
+                            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20 backdrop-blur-md">
+                                <LucideZap className="w-4 h-4 text-primary fill-current" />
+                            </div>
+                            <span className="font-semibold text-primary tracking-wide text-sm">{kit.total_power} kW System</span>
+                        </div>
+                    )}
+
+                    {/* Title */}
+                    <motion.h3 layout className={`${compact ? 'text-lg mb-1' : 'text-3xl mb-3'} font-bold text-white leading-tight drop-shadow-lg`}>
+                        {kit.name}
+                    </motion.h3>
+
+                    {/* Description - reveals on hover ONLY if not compact */}
+                    {!compact && (
+                        <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-[grid-template-rows] duration-500">
+                            <p className="text-slate-200 text-sm line-clamp-3 overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 mb-4 font-light leading-relaxed">
+                                {kit.description}
+                            </p>
+                        </div>
+                    )}
+
+                    {/* Price and Action */}
+                    <div className={`flex items-end justify-between border-t border-white/10 ${compact ? 'pt-3 mt-1' : 'pt-5 mt-2'}`}>
+                        <div className="flex flex-col">
+                            <div className="flex items-baseline gap-1">
+                                <motion.span layout className={`${compact ? 'text-xl' : 'text-3xl'} font-bold text-white tracking-tight`}>
+                                    {formatCurrency(kit.price)}
+                                </motion.span>
+                            </div>
+                            {!compact && (
+                                <span className="text-sm text-slate-400 font-medium">
+                                    or {formatCurrency(kit.monthly_finance_cost)}/mo
+                                </span>
+                            )}
+                        </div>
+
+                        {!compact && (
+                            <Button
+                                variant="primary"
+                                size="icon"
+                                className="bg-white text-black hover:bg-primary hover:text-white w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 shadow-lg group-hover:scale-110"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onViewDetails?.();
+                                }}
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
+                            </Button>
+                        )}
+                    </div>
+                </motion.div>
+            </motion.div>
         </Card>
     );
 }

@@ -1,9 +1,11 @@
+import { useState } from 'react';
 import { GlassContainer } from '../common/GlassContainer';
 import { Badge } from '../common/Badge';
 import { MapPin, Star, ShieldCheck, UserCheck } from 'lucide-react';
 import { useTranslation, Trans } from 'react-i18next';
+import { InstallerDetailModal, type Installer } from './InstallerDetailModal';
 
-const INSTALLERS = [
+const INSTALLERS: Installer[] = [
     {
         id: 1,
         name: "SolarTech Madrid",
@@ -11,7 +13,12 @@ const INSTALLERS = [
         rating: 4.9,
         reviews: 124,
         verified: true,
-        avatar: "ST"
+        avatar: "ST",
+        description: "Líderes en instalación fotovoltaica en la Comunidad de Madrid. Más de 10 años llevando energía limpia a hogares y empresas con un servicio llave en mano que incluye desde el diseño hasta la legalización.",
+        specialties: ["Instalación Residencial", "Sistemas Híbridos", "Cargadores VE", "Mantenimiento Preventivo"],
+        yearsExperience: 12,
+        completedProjects: 1540,
+        certifications: ["Industria Acreditado", "Tesla Certified Installer", "SunPower Premier Partner"]
     },
     {
         id: 2,
@@ -20,7 +27,12 @@ const INSTALLERS = [
         rating: 4.8,
         reviews: 89,
         verified: true,
-        avatar: "EI"
+        avatar: "EI",
+        description: "Expertos en autoconsumo compartido y comunidades solares. Hacemos que la transición energética sea fácil y accesible para todos en el área metropolitana de Barcelona, priorizando la estética y eficiencia.",
+        specialties: ["Comunidades Solares", "Residencial Premium", "Tramitación de Subvenciones", "Baterías Virtuales"],
+        yearsExperience: 8,
+        completedProjects: 850,
+        certifications: ["Generalitat Certificado", "Huawei Gold Partner", "APsystems Expert"]
     },
     {
         id: 3,
@@ -29,12 +41,18 @@ const INSTALLERS = [
         rating: 5.0,
         reviews: 56,
         verified: true,
-        avatar: "VR"
+        avatar: "VR",
+        description: "Especialistas en grandes instalaciones de autoconsumo industrial y bombeo solar. Ingeniería propia para garantizar el máximo rendimiento de tu instalación bajo el sol del Levante.",
+        specialties: ["Industrial", "Bombeo Solar", "Huertas Solares", "Alta Tensión"],
+        yearsExperience: 15,
+        completedProjects: 2100,
+        certifications: ["ISO 9001:2015", "Fronius Service Partner", "SMA Expert Installer"]
     }
 ];
 
 export function InstallerSection() {
     const { t } = useTranslation();
+    const [selectedInstaller, setSelectedInstaller] = useState<Installer | null>(null);
 
     return (
         <section id="installers" className="py-24 relative overflow-hidden">
@@ -70,10 +88,14 @@ export function InstallerSection() {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {INSTALLERS.map(installer => (
-                        <GlassContainer key={installer.id} className="p-6 hover:border-primary/30 transition-colors group cursor-pointer">
+                        <GlassContainer
+                            key={installer.id}
+                            className="p-6 hover:border-primary/30 transition-all duration-300 group cursor-pointer hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-1"
+                            onClick={() => setSelectedInstaller(installer)}
+                        >
                             <div className="flex items-start justify-between mb-6">
                                 <div className="flex items-center gap-4">
-                                    <div className="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center text-white font-bold border border-white/10 group-hover:scale-110 transition-transform">
+                                    <div className="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center text-white font-bold border border-white/10 group-hover:scale-110 group-hover:border-primary/50 transition-all">
                                         {installer.avatar}
                                     </div>
                                     <div>
@@ -93,18 +115,24 @@ export function InstallerSection() {
 
                             <div className="flex items-center justify-between pt-4 border-t border-white/5">
                                 <div className="flex items-center gap-1">
-                                    <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+                                    <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
                                     <span className="text-white font-mono">{installer.rating}</span>
                                     <span className="text-slate-500 text-xs">({installer.reviews})</span>
                                 </div>
-                                <button className="text-xs font-bold text-white group-hover:text-primary transition-colors">
-                                    {t('installers.viewProfile')} →
+                                <button className="text-xs font-bold text-white group-hover:text-primary transition-colors flex items-center gap-1">
+                                    {t('installers.viewProfile')} <span className="group-hover:translate-x-1 transition-transform">→</span>
                                 </button>
                             </div>
                         </GlassContainer>
                     ))}
                 </div>
             </div>
+
+            <InstallerDetailModal
+                installer={selectedInstaller}
+                isOpen={!!selectedInstaller}
+                onClose={() => setSelectedInstaller(null)}
+            />
         </section>
     );
 }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, useMap, useMapEvents, Rectangle, CircleMarker } from 'react-leaflet';
-import { Search, Zap, Sun, Info, Loader2, ScanLine, BrainCircuit, Waves, Maximize2, Minimize2, Plus, Minus, MousePointer2, ChevronDown, ChevronUp, X, Locate, Trash2, Layers } from 'lucide-react';
+import { Search, Zap, Sun, Loader2, ScanLine, BrainCircuit, Waves, Maximize2, Minimize2, Plus, Minus, MousePointer2, ChevronDown, ChevronUp, X, Locate, Trash2, Layers } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';

@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { MessageCircle, X, Send, Bot, User } from 'lucide-react';
+import { X, Send, Bot, User, LucideZap } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Button } from '../common/Button';
 import { cn } from '../../lib/utils';
@@ -25,14 +25,42 @@ export function Catbot() {
     const [inputValue, setInputValue] = useState('');
     const [isTyping, setIsTyping] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
 
+    // Auto-focus input when opened
+    useEffect(() => {
+        if (isOpen) {
+            setTimeout(() => {
+                inputRef.current?.focus();
+            }, 100);
+        }
+    }, [isOpen]);
+
     useEffect(() => {
         scrollToBottom();
     }, [messages, isTyping]);
+
+    const [showChat, setShowChat] = useState(false);
+
+    // Track scroll to hide entire chat on hero section
+    useEffect(() => {
+        const handleScroll = () => {
+            // Show chat only after scrolling down 500px (past hero)
+            setShowChat(window.scrollY > 500);
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        // Initial check
+        handleScroll();
+
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    const hasInteracted = messages.some(m => m.sender === 'user');
 
     const handleSendMessage = async () => {
         if (!inputValue.trim()) return;
@@ -100,15 +128,110 @@ export function Catbot() {
 
     return (
         <>
-            {/* Toggle Button */}
-            <motion.button
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                onClick={() => setIsOpen(!isOpen)}
-                className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-primary text-secondary rounded-full flex items-center justify-center shadow-lg shadow-primary/20 hover:scale-110 transition-transform"
-            >
-                {isOpen ? <X className="w-6 h-6" /> : <MessageCircle className="w-8 h-8" />}
-            </motion.button>
+            {/* Click Outside Backdrop - Invisible but captures clicks */}
+            {isOpen && (
+                <div
+                    className="fixed inset-0 z-[45]"
+                    onClick={() => setIsOpen(false)}
+                />
+            )}
+
+            {/* Animated Chat Button Container */}
+            <AnimatePresence>
+                {(showChat || isOpen) && (
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0, rotate: 180 }}
+                        animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                        exit={{ opacity: 0, scale: 0, rotate: -180 }}
+                        transition={{ type: "spring", stiffness: 260, damping: 20 }}
+                        className="fixed bottom-8 right-8 z-50 flex flex-col items-center gap-2"
+                    >
+
+                        {/* AI Label - floating above */}
+                        <AnimatePresence>
+                            {!isOpen && !hasInteracted && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: 10, scale: 0.8 }}
+                                    animate={{
+                                        opacity: [1, 0.7, 1],
+                                        scale: 1,
+                                        y: [0, -5, 0],
+                                    }}
+                                    exit={{ opacity: 0, scale: 0.8 }}
+                                    transition={{
+                                        duration: 3,
+                                        ease: "easeInOut",
+                                        repeat: Infinity,
+                                    }}
+                                    className="absolute -top-14 -right-2 bg-zinc-900/90 backdrop-blur-md border border-white/10 text-zinc-100 text-xs font-bold px-3 py-2 rounded-2xl shadow-xl flex items-center gap-3 cursor-pointer hover:bg-zinc-800 transition-colors"
+                                    onClick={() => setIsOpen(true)}
+                                >
+                                    <span className="relative flex h-2 w-2 shrink-0">
+                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                                        <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                                    </span>
+                                    <div className="flex flex-col items-start text-left leading-tight">
+                                        <span>Ask AI</span>
+                                        <span>Assistant</span>
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
+                        <div className="relative group">
+                            {/* Softer Breathing/Ripple Effect */}
+                            <motion.div
+                                animate={{
+                                    scale: [1, 1.2, 1],
+                                    opacity: [0.1, 0.3, 0.1]
+                                }}
+                                transition={{
+                                    duration: 3,
+                                    repeat: Infinity,
+                                    ease: "easeInOut"
+                                }}
+                                className="absolute inset-0 bg-primary/20 rounded-full blur-sm"
+                            />
+
+                            {/* Main Button */}
+                            <motion.button
+                                layout
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={() => setIsOpen(!isOpen)}
+                                className={cn(
+                                    "relative w-16 h-16 rounded-full flex items-center justify-center shadow-2xl transition-all duration-300 z-50", // z-50 to stay above backdrop
+                                    isOpen
+                                        ? "bg-zinc-800 text-white rotate-90"
+                                        : "bg-gradient-to-tr from-primary via-yellow-400 to-yellow-200 text-black border-4 border-black/50"
+                                )}
+                            >
+                                {isOpen ? (
+                                    <X className="w-8 h-8" />
+                                ) : (
+                                    <div className="relative">
+                                        <Bot className="w-8 h-8" />
+                                        <motion.div
+                                            animate={{
+                                                opacity: [0.6, 1, 0.6],
+                                                scale: [0.9, 1.1, 0.9]
+                                            }}
+                                            transition={{
+                                                duration: 2,
+                                                repeat: Infinity,
+                                                ease: "easeInOut"
+                                            }}
+                                            className="absolute -top-1 -right-1"
+                                        >
+                                            <LucideZap className="w-4 h-4 text-white fill-white drop-shadow-md" />
+                                        </motion.div>
+                                    </div>
+                                )}
+                            </motion.button>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
             {/* Chat Window */}
             <AnimatePresence>
@@ -178,6 +301,7 @@ export function Catbot() {
                         <div className="p-4 border-t border-white/10 bg-white/5">
                             <div className="flex gap-2">
                                 <input
+                                    ref={inputRef}
                                     type="text"
                                     value={inputValue}
                                     onChange={(e) => setInputValue(e.target.value)}

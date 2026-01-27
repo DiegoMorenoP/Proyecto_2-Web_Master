@@ -5,6 +5,8 @@ import { Search, X, Filter, ArrowUpDown } from 'lucide-react';
 import type { Kit } from '../../types';
 import { KitCard } from './KitCard';
 import { useTranslation } from 'react-i18next';
+import { ProductDetailInline } from './ProductDetailInline';
+import { useCart } from '../../context/CartContext';
 
 interface CatalogueModalProps {
     isOpen: boolean;
@@ -13,7 +15,7 @@ interface CatalogueModalProps {
     onViewDetails: (kit: Kit) => void;
 }
 
-export function CatalogueModal({ isOpen, onClose, kits, onViewDetails }: CatalogueModalProps) {
+export function CatalogueModal({ isOpen, onClose, kits }: CatalogueModalProps) {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedType, setSelectedType] = useState<string>('all');
     const [sortOrder, setSortOrder] = useState<'price_asc' | 'price_desc' | 'power_stats'>('power_stats');
@@ -59,6 +61,124 @@ export function CatalogueModal({ isOpen, onClose, kits, onViewDetails }: Catalog
 
         return result;
     }, [kits, searchTerm, selectedType, sortOrder]);
+
+    // Expansion Logic
+    const [expandedProductId, setExpandedProductId] = useState<string | null>(null);
+    const { addItem } = useCart();
+
+    useEffect(() => {
+        if (!isOpen) {
+            setExpandedProductId(null);
+        }
+    }, [isOpen]);
+
+    // Adjust columns based on modal grid layout (1 sm, 2 lg, 3 xl, 4 2xl?? No the grid is: sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4)
+    // We need a specific useColumns for the modal because the breakpoints might differ or relative width matters?
+    // Actually the standard useColumns logic is simplistic (1, 2, 3). Let's use a local logic or just accept it might be slightly off if sticky.
+    // However, the modal is simpler:
+    // grid-cols-1 (mobile)
+    // sm:grid-cols-2
+    // lg:grid-cols-3
+    // xl:grid-cols-4
+
+    // We need to know the CURRENT number of columns in the grid to calculate the row injection.
+    // Let's create a custom hook or logic here.
+    const [modalColumns, setModalColumns] = useState(1);
+
+    useEffect(() => {
+        const updateColumns = () => {
+            if (window.matchMedia('(min-width: 1280px)').matches) {
+                setModalColumns(4); // xl
+            } else if (window.matchMedia('(min-width: 1024px)').matches) {
+                setModalColumns(3); // lg
+            } else if (window.matchMedia('(min-width: 640px)').matches) {
+                setModalColumns(2); // sm
+            } else {
+                setModalColumns(1);
+            }
+        };
+
+        updateColumns();
+        window.addEventListener('resize', updateColumns);
+        return () => window.removeEventListener('resize', updateColumns);
+    }, []);
+
+    // Scroll to expanded item
+    useEffect(() => {
+        if (expandedProductId) {
+            // Small delay to allow layout to shift
+            setTimeout(() => {
+                const element = document.getElementById(`item-container-${expandedProductId}`);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 800);
+        }
+    }, [expandedProductId]);
+
+    const renderGridWithExpansion = () => {
+        const items = [];
+        const expandedIndex = filteredKits.findIndex(k => k.id === expandedProductId);
+
+        let insertIndex = -1;
+        let expandedRowNumber = -1;
+
+        if (expandedIndex !== -1) {
+            expandedRowNumber = Math.floor(expandedIndex / modalColumns);
+            insertIndex = (expandedRowNumber + 1) * modalColumns - 1;
+        }
+
+        for (let i = 0; i < filteredKits.length; i++) {
+            const kit = filteredKits[i];
+            const currentRow = Math.floor(i / modalColumns);
+            const isCompactRow = currentRow === expandedRowNumber;
+
+            items.push(
+                <motion.div
+                    key={kit.id}
+                    id={`item-container-${kit.id}`}
+                    layout="position"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{
+                        opacity: 1,
+                        scale: 1,
+                        // If it's the row of the expanded item, compact it to semi-height
+                        height: isCompactRow ? 250 : 'auto'
+                    }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
+                    className={isCompactRow ? "h-[250px]" : "min-h-[500px]"}
+                >
+                    <KitCard
+                        kit={kit}
+                        compact={isCompactRow}
+                        onViewDetails={() => setExpandedProductId(expandedProductId === kit.id ? null : kit.id)}
+                    />
+                </motion.div>
+            );
+
+            const isEndOfRow = i === insertIndex;
+            const isLastItem = i === filteredKits.length - 1;
+
+            if (expandedIndex !== -1 && (isEndOfRow || (isLastItem && i < insertIndex))) {
+                const expandedKit = filteredKits[expandedIndex];
+                items.push(
+                    <div key={`details-${expandedKit.id}`} className="col-span-1 sm:col-span-2 lg:col-span-3 xl:col-span-4 w-full">
+                        <ProductDetailInline
+                            product={expandedKit}
+                            onClose={() => setExpandedProductId(null)}
+                            onAddToCart={(p) => {
+                                addItem(p);
+                                setExpandedProductId(null);
+                            }}
+                        />
+                    </div>
+                );
+                insertIndex = -2;
+            }
+        }
+        return items;
+    };
 
     const tabs = [
         { id: 'all', label: t('catalog.tabs.all') },
@@ -154,15 +274,10 @@ export function CatalogueModal({ isOpen, onClose, kits, onViewDetails }: Catalog
                                 {/* Content Grid */}
                                 <div className="flex-1 overflow-y-auto p-6 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent bg-zinc-950/50">
                                     {filteredKits.length > 0 ? (
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-20">
-                                            {filteredKits.map(kit => (
-                                                <div key={kit.id} className="h-[380px]">
-                                                    <KitCard
-                                                        kit={kit}
-                                                        onViewDetails={() => onViewDetails(kit)}
-                                                    />
-                                                </div>
-                                            ))}
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-20 auto-rows-auto">
+                                            <AnimatePresence mode="popLayout" initial={false}>
+                                                {renderGridWithExpansion()}
+                                            </AnimatePresence>
                                         </div>
                                     ) : (
                                         <div className="h-full flex flex-col items-center justify-center text-slate-500 gap-4 min-h-[400px]">

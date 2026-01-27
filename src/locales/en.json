@@ -82,6 +82,7 @@
         "title": "Featured Kits",
         "description": "Pre-configured photovoltaic systems for maximum efficiency and immediate savings.",
         "viewAll": "View all products",
+        "showMore": "Show More",
         "modal": {
             "title": "Product Catalog",
             "subtitle": "Explore our complete range of solar kits",

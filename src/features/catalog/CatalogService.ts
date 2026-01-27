@@ -6,7 +6,7 @@ export const CatalogService = {
         const { data, error } = await supabase
             .from('kits')
             .select('*')
-            .order('price', { ascending: true });
+            .order('popularity_score', { ascending: false });
 
         if (error) {
             console.error('Error fetching kits:', error);

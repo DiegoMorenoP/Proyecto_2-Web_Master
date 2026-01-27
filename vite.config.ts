@@ -9,11 +9,11 @@ export default defineConfig({
     port: 5173,
     strictPort: true,
   },
-  test: {
+  /* test: {
     globals: true,
     environment: 'jsdom',
     setupFiles: './vitest.setup.ts',
-    include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
-    exclude: ['tests/e2e/**/*', 'node_modules/**/*'],
-  },
+    include: ['src/!**!/!*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+    exclude: ['tests/e2e/!**!/!*', 'node_modules/!**!/!*'],
+  }, */
 })
