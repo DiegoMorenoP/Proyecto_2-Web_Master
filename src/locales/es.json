@@ -79,5 +79,29 @@
             "title": "Soporte Técnico 24/7",
             "desc": "Expertos ingenieros a tu disposición en cualquier momento."
         }
+    },
+    "catalog": {
+        "badge": "CATÁLOGO 2024",
+        "title": "Kits Destacados",
+        "description": "Sistemas fotovoltaicos pre-configurados para máxima eficiencia y ahorro inmediato.",
+        "viewAll": "Ver todos los productos",
+        "modal": {
+            "title": "Catálogo de Productos",
+            "subtitle": "Explora nuestra gama completa de kits solares",
+            "searchPlaceholder": "Buscar por nombre, potencia...",
+            "noResults": "No se encontraron productos con estos filtros.",
+            "clearFilters": "Limpiar filtros"
+        },
+        "tabs": {
+            "all": "Todos",
+            "grid": "Red",
+            "hybrid": "Híbridos",
+            "isolated": "Aislada"
+        },
+        "sort": {
+            "powerStats": "Mayor Potencia",
+            "priceAsc": "Precio: Menor primero",
+            "priceDesc": "Precio: Mayor primero"
+        }
     }
 }

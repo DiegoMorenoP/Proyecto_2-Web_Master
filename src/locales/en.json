@@ -76,5 +76,29 @@
             "title": "24/7 Technical Support",
             "desc": "Expert engineers at your disposal at any time."
         }
+    },
+    "catalog": {
+        "badge": "CATALOG 2024",
+        "title": "Featured Kits",
+        "description": "Pre-configured photovoltaic systems for maximum efficiency and immediate savings.",
+        "viewAll": "View all products",
+        "modal": {
+            "title": "Product Catalog",
+            "subtitle": "Explore our complete range of solar kits",
+            "searchPlaceholder": "Search by name, power...",
+            "noResults": "No products found with these filters.",
+            "clearFilters": "Clear filters"
+        },
+        "tabs": {
+            "all": "All",
+            "grid": "Grid-Tied",
+            "hybrid": "Hybrid",
+            "isolated": "Off-Grid"
+        },
+        "sort": {
+            "powerStats": "Highest Power",
+            "priceAsc": "Price: Low to High",
+            "priceDesc": "Price: High to Low"
+        }
     }
 }

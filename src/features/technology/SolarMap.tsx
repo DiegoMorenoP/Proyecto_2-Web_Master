@@ -4,7 +4,7 @@ import { Search, Zap, Sun, Info, Loader2, ScanLine, BrainCircuit, Waves, Maximiz
 import { motion, AnimatePresence } from 'framer-motion';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import { useImperativeHandle, forwardRef } from 'react';
+
 
 // Fix Leaflet generic marker icon
 import icon from 'leaflet/dist/images/marker-icon.png';

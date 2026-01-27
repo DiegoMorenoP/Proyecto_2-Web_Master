@@ -41,7 +41,7 @@ export function SolarDsmSection() {
                     </div>
 
                     {/* Right: Functional Solar Map */}
-                    <div className="relative aspect-square md:aspect-video lg:aspect-square h-[500px] w-full">
+                    <div className="relative aspect-square md:aspect-video lg:aspect-square h-[500px] w-full rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
                         <SolarMap />
                     </div>
                 </div>

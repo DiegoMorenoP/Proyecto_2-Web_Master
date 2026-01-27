@@ -7,9 +7,10 @@ import { formatCurrency } from '../../lib/utils';
 
 interface KitCardProps {
     kit: Kit;
+    onViewDetails?: () => void;
 }
 
-export function KitCard({ kit }: KitCardProps) {
+export function KitCard({ kit, onViewDetails }: KitCardProps) {
     return (
         <Card variant="interactive" className="h-full flex flex-col group relative overflow-hidden">
             {/* Glow Effect */}
@@ -55,7 +56,11 @@ export function KitCard({ kit }: KitCardProps) {
                         or {formatCurrency(kit.price)} cash
                     </div>
 
-                    <Button variant="outline" className="w-full group-hover:bg-primary group-hover:text-secondary group-hover:border-primary transition-all">
+                    <Button
+                        variant="outline"
+                        className="w-full group-hover:bg-primary group-hover:text-secondary group-hover:border-primary transition-all"
+                        onClick={onViewDetails}
+                    >
                         View Details
                     </Button>
                 </div>
