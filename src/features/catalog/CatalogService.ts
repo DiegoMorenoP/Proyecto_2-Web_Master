@@ -11,7 +11,8 @@ const MOCK_KITS: Kit[] = [
         monthly_finance_cost: 45.00,
         description: 'Ideal fo small apartments. Includes essential panels and efficient inverter.',
         image_url: 'https://images.unsplash.com/photo-1497436072909-60f360e1d4b0?auto=format&fit=crop&w=800&q=80',
-        popularity_score: 95
+        popularity_score: 95,
+        stock: 5
     },
     {
         id: 'mock-2',
@@ -22,7 +23,8 @@ const MOCK_KITS: Kit[] = [
         monthly_finance_cost: 65.00,
         description: 'Perfect for standard families (3-4 people). Covers AC, laundry, and daily appliances.',
         image_url: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=800&q=80',
-        popularity_score: 88
+        popularity_score: 88,
+        stock: 3
     },
     {
         id: 'mock-3',
@@ -33,7 +35,8 @@ const MOCK_KITS: Kit[] = [
         monthly_finance_cost: 120.00,
         description: 'Designed for large homes. Includes battery storage for night usage.',
         image_url: 'https://images.unsplash.com/photo-1613665813446-82a78c468a1d?auto=format&fit=crop&w=800&q=80',
-        popularity_score: 92
+        popularity_score: 92,
+        stock: 0
     }
 ];
 
