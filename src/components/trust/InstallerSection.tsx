@@ -102,7 +102,7 @@ export function InstallerSection() {
     return (
         <section id="installers" className="py-24 relative overflow-hidden">
             {/* Background Decor */}
-            <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-primary/5 to-transparent pointer-events-none" />
+            <div className="absolute top-4 right-4 bottom-4 w-1/3 bg-gradient-to-l from-primary/5 to-transparent pointer-events-none rounded-3xl" />
 
             <div className="container mx-auto px-4 relative z-10">
                 <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
