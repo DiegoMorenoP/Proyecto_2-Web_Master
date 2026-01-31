@@ -10,10 +10,9 @@ interface InstallersListModalProps {
     isOpen: boolean;
     onClose: () => void;
     installers: Installer[];
-    onSelectInstaller: (installer: Installer) => void;
 }
 
-export function InstallersListModal({ isOpen, onClose, installers, onSelectInstaller }: InstallersListModalProps) {
+export function InstallersListModal({ isOpen, onClose, installers }: InstallersListModalProps) {
     const [searchTerm, setSearchTerm] = useState('');
     // Responsive Grid Columns
     const [modalColumns, setModalColumns] = useState(1);
@@ -83,8 +82,7 @@ export function InstallersListModal({ isOpen, onClose, installers, onSelectInsta
 
         for (let i = 0; i < filteredInstallers.length; i++) {
             const installer = filteredInstallers[i];
-            const currentRow = Math.floor(i / modalColumns);
-            const isCompactRow = currentRow === expandedRowNumber;
+
 
             items.push(
                 <motion.div

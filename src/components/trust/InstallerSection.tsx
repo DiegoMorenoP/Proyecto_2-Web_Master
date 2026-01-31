@@ -100,7 +100,7 @@ export function InstallerSection() {
     const [isListModalOpen, setIsListModalOpen] = useState(false);
 
     return (
-        <section id="installers" className="py-24 relative overflow-hidden">
+        <section id="installers" className="py-12 relative overflow-hidden">
             {/* Background Decor */}
             <div className="absolute top-4 right-4 bottom-4 w-1/3 bg-gradient-to-l from-primary/5 to-transparent pointer-events-none rounded-3xl" />
 
@@ -192,10 +192,6 @@ export function InstallerSection() {
                 isOpen={isListModalOpen}
                 onClose={() => setIsListModalOpen(false)}
                 installers={INSTALLERS}
-                onSelectInstaller={(installer) => {
-                    setIsListModalOpen(false);
-                    setTimeout(() => setSelectedInstaller(installer), 300); // Small delay for smooth transition
-                }}
             />
         </section>
     );

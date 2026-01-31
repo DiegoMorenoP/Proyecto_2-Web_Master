@@ -67,7 +67,7 @@ export const TestimonialsSection = () => {
     };
 
     return (
-        <section className="py-24 bg-secondary/20 relative overflow-hidden">
+        <section className="py-12 bg-secondary/20 relative overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
 
             <div className="container mx-auto px-4 relative z-10">

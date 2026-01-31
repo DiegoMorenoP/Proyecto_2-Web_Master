@@ -44,12 +44,16 @@ export function TestimonialsModal({ isOpen, onClose, testimonials }: Testimonial
                         onClick={onClose}
                         className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-sm"
                     />
-                    <div className="fixed inset-0 z-[10000] overflow-y-auto">
+                    <div
+                        className="fixed inset-0 z-[10000] overflow-y-auto"
+                        onClick={onClose}
+                    >
                         <div className="flex min-h-screen items-center justify-center p-4">
                             <motion.div
                                 initial={{ opacity: 0, scale: 0.95, y: 20 }}
                                 animate={{ opacity: 1, scale: 1, y: 0 }}
                                 exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                                onClick={(e) => e.stopPropagation()}
                                 className="relative w-full max-w-6xl bg-zinc-950 border border-white/10 shadow-2xl rounded-3xl overflow-hidden flex flex-col max-h-[90vh]"
                             >
                                 <div className="p-6 border-b border-white/10 bg-black/20 backdrop-blur-xl flex flex-col gap-4 z-20 shrink-0">

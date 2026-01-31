@@ -8,7 +8,7 @@ export function SolarDsmSection() {
     const { t } = useTranslation();
 
     return (
-        <section id="dsm" className="py-24 relative">
+        <section id="dsm" className="py-12 relative">
             <div className="container mx-auto px-4 relative z-10 w-full">
                 <div className="bg-slate-900/50 backdrop-blur-xl border border-white/10 rounded-3xl md:rounded-[50px] p-6 lg:p-10 xl:p-12 shadow-2xl relative overflow-hidden">
                     <div className="grid lg:grid-cols-12 gap-10 xl:gap-16 items-center">

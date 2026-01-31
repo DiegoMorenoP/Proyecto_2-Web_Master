@@ -36,7 +36,7 @@ export function CatalogSection() {
     // ... (skipping duplicate useEffect) ...
 
     return (
-        <section className="py-20">
+        <section className="py-12">
             <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6 px-4">
                 <div>
                     <div className="flex items-center gap-2 mb-3">

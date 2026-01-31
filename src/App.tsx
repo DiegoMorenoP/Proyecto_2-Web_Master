@@ -30,7 +30,7 @@ function HomePage() {
       {/* Hero Section */}
       <HeroSection onScrollToSimulator={scrollToSimulator} />
 
-      <div className="container mx-auto px-4 py-12 space-y-24">
+      <div className="container mx-auto px-4 py-12 space-y-12">
         {/* Calculator Section */}
         <div id="calculator" className="scroll-mt-24">
           <SolarCalculator onReserveClick={() => setIsLeadFormOpen(true)} />
