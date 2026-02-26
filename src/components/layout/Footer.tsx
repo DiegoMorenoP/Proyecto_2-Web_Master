@@ -11,8 +11,8 @@ export function Footer() {
                             <span className="text-xl font-bold tracking-tight text-white">SolarGen</span>
                         </div>
                         <p className="text-slate-400 max-w-xs">
-                            The next generation of sustainable energy e-commerce.
-                            Engineering grade hardware, consumer grade experience.
+                            Plataforma B2B de distribución solar mayorista.
+                            Material Tier-1. Precios profesionales. Logística express.
                         </p>
                     </div>
 
@@ -28,7 +28,7 @@ export function Footer() {
                     <div>
                         <h4 className="font-semibold text-white mb-4">Support</h4>
                         <ul className="space-y-2 text-slate-400">
-                            <li><a href="#" className="hover:text-primary transition-colors">Installers</a></li>
+
                             <li><a href="#" className="hover:text-primary transition-colors">Contact</a></li>
                             <li><a href="#" className="hover:text-primary transition-colors">Warranty</a></li>
                         </ul>

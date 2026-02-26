@@ -1,10 +1,12 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Trash2, ShoppingBag, ArrowRight, Minus, Plus } from 'lucide-react';
+import { X, Trash2, ShoppingBag, ArrowRight, Minus, Plus, Maximize2 } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '../common/Button';
 
 export function CartDrawer() {
     const { items, isOpen, toggleCart, removeItem, updateQuantity, subtotal, clearCart } = useCart();
+    const navigate = useNavigate();
 
     return (
         <AnimatePresence>
@@ -44,12 +46,25 @@ export function CartDrawer() {
                                         <span className="hidden sm:inline">Vaciar</span>
                                     </button>
                                 )}
-                                <button
-                                    onClick={toggleCart}
-                                    className="p-2 text-slate-400 hover:text-white transition-colors"
-                                >
-                                    <X className="w-6 h-6" />
-                                </button>
+                                <div className="flex items-center gap-1 border-l border-white/10 pl-4">
+                                    <button
+                                        onClick={() => {
+                                            toggleCart();
+                                            navigate('/cart');
+                                        }}
+                                        className="p-2 text-slate-400 hover:text-white transition-colors"
+                                        title="Ampliar a pantalla completa"
+                                    >
+                                        <Maximize2 className="w-5 h-5" />
+                                    </button>
+                                    <button
+                                        onClick={toggleCart}
+                                        className="p-2 text-slate-400 hover:text-white transition-colors"
+                                        title="Cerrar carrito"
+                                    >
+                                        <X className="w-6 h-6" />
+                                    </button>
+                                </div>
                             </div>
                         </div>
 

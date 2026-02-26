@@ -8,48 +8,48 @@ const TESTIMONIALS: Testimonial[] = [
     {
         id: 1,
         name: "Carlos Rodríguez",
-        role: "Propietario en Madrid",
-        text: "La simulación fue exacta. Me dijeron que ahorraría 400€ al año y tras 6 meses estoy ahorrando incluso más. El proceso de instalación fue impecable.",
+        role: "Instalador certificado · Madrid",
+        text: "Desde que trabajo con SolarGen, mis márgenes han mejorado un 25%. Los precios mayoristas son imbatibles y la entrega en 24h me permite cerrar proyectos mucho más rápido.",
         rating: 5,
         image: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80&w=200&h=200"
     },
     {
         id: 2,
         name: "Ana Morales",
-        role: "Casa de Campo en Toledo",
-        text: "Increíble la tecnología de mapeo solar. Me mostraron exactamente dónde poner los paneles para máxima eficiencia. Muy recomendado.",
+        role: "CEO, SolTech Instalaciones · Toledo",
+        text: "El soporte técnico de SolarGen es excepcional. Me asignaron un ingeniero dedicado que nos ayuda con el dimensionamiento de cada proyecto. Eso marca la diferencia frente a otros distribuidores.",
         rating: 5,
         image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200&h=200"
     },
     {
         id: 3,
-        name: "David K.",
-        role: "Chalet en Valencia",
-        text: "El servicio post-venta es de otro nivel. Tuve una duda con el inversor y me llamaron en 5 minutos. Profesionales de verdad.",
+        name: "David Krauser",
+        role: "Distribuidor regional · Valencia",
+        text: "La plataforma online es brutal. Stock en tiempo real, pedidos automáticos y seguimiento de envíos. Es lo que necesitábamos para escalar nuestro negocio.",
         rating: 5,
         image: null
     },
     {
         id: 4,
         name: "Elena Pastor",
-        role: "Ático en Barcelona",
-        text: "Tenía dudas por el espacio en mi terraza, pero el kit Urban fue perfecto. Ahora cargo mi coche eléctrico casi gratis.",
+        role: "Directora Operaciones, EnergiVerde · Barcelona",
+        text: "Gestionamos +200 instalaciones al año y SolarGen es nuestro proveedor principal. La calidad del material Tier-1 y las condiciones de pago hacen que sea imposible buscar otro proveedor.",
         rating: 5,
         image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=200&h=200"
     },
     {
         id: 5,
-        name: "Miguel Ángel",
-        role: "Finca en Andalucía",
-        text: "La instalación aislada cambió mi vida. Ya no dependo de generadores ruidosos. Silencio total y energía limpia.",
+        name: "Miguel Ángel Ruiz",
+        role: "Ingeniero solar autónomo · Andalucía",
+        text: "Como autónomo, necesitaba un proveedor fiable sin mínimos de pedido absurdos. SolarGen me ofrece precios competitivos desde la primera unidad. Totalmente recomendado.",
         rating: 5,
         image: null
     },
     {
         id: 6,
         name: "Sarah Jenkins",
-        role: "Villa en Málaga",
-        text: "Very impressive service. The installers were clean, fast, and explained the app perfectly. Loving my solar production!",
+        role: "Operations Manager, SunPower UK · Málaga",
+        text: "We manage installations across southern Spain and SolarGen's logistics are outstanding. 24-48h delivery, Tier-1 products, and a dedicated account manager. Best B2B solar supplier we've worked with.",
         rating: 5,
         image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=200&h=200"
     }

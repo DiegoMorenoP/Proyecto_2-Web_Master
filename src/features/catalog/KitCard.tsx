@@ -31,7 +31,7 @@ export function KitCard({ kit, onViewDetails, compact = false }: KitCardProps) {
                         layout
                         src={kit.image_url}
                         alt={kit.name}
-                        className={`w-full h-full object-cover transition-transform duration-1000 ease-in-out ${compact ? 'scale-100' : 'group-hover:scale-110'} ${isOutOfStock ? 'grayscale opacity-75' : ''}`}
+                        className={`w-full h-full object-cover transition-transform duration-1000 ease-in-out ${compact ? 'group-hover:scale-105' : 'group-hover:scale-110'} ${isOutOfStock ? 'grayscale opacity-75' : ''}`}
                         loading="lazy"
                         onError={() => setImgError(true)}
                     />
@@ -77,7 +77,7 @@ export function KitCard({ kit, onViewDetails, compact = false }: KitCardProps) {
 
                 {/* Bottom Info Panel */}
                 <motion.div layout className={`transform transition-transform duration-700 ease-in-out ${compact ? 'translate-y-0' : 'translate-y-4 group-hover:translate-y-0'}`}>
-                    {/* Power Spec */}
+                    {/* Power Spec - full mode */}
                     {!compact && (
                         <div className="flex items-center gap-2 mb-3">
                             <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20 backdrop-blur-md">
@@ -91,6 +91,19 @@ export function KitCard({ kit, onViewDetails, compact = false }: KitCardProps) {
                     <motion.h3 layout className={`${compact ? 'text-lg mb-1' : 'text-3xl mb-3'} font-bold text-white leading-tight drop-shadow-lg`}>
                         {kit.name}
                     </motion.h3>
+
+                    {/* Compact hover reveal: power + type between name and price */}
+                    {compact && (
+                        <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-[grid-template-rows] duration-500">
+                            <div className="overflow-hidden">
+                                <div className="flex items-center gap-2 pb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-75">
+                                    <LucideZap className="w-3 h-3 text-primary fill-current" />
+                                    <span className="text-xs font-semibold text-primary">{kit.total_power} kW</span>
+                                    <span className="text-[10px] text-slate-400 uppercase tracking-wider font-bold">{kit.type}</span>
+                                </div>
+                            </div>
+                        </div>
+                    )}
 
                     {/* Description - reveals on hover ONLY if not compact */}
                     {!compact && (

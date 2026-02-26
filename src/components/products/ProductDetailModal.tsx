@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { X, Check, ShoppingCart, Zap, Battery, Home, Info, ArrowRight } from 'lucide-react';
+import { X, Check, ShoppingCart, Zap, Battery, Home, Info, ArrowRight, Maximize2, ExternalLink } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { Kit } from '../../types';
 import { Button } from '../common/Button';
@@ -10,9 +10,10 @@ interface ProductDetailModalProps {
     onClose: () => void;
     product: Kit | null;
     onAddToCart: (product: Kit) => void;
+    onExpand?: (product: Kit) => void;
 }
 
-export function ProductDetailModal({ isOpen, onClose, product, onAddToCart }: ProductDetailModalProps) {
+export function ProductDetailModal({ isOpen, onClose, product, onAddToCart, onExpand }: ProductDetailModalProps) {
     const { t } = useTranslation();
     const [imgError, setImgError] = useState(false);
     const isOutOfStock = product?.stock_status === 'out_of_stock' || (product?.stock !== undefined && product.stock <= 0);
@@ -44,13 +45,31 @@ export function ProductDetailModal({ isOpen, onClose, product, onAddToCart }: Pr
                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
                         className="fixed z-[10060] left-4 right-4 top-4 bottom-4 md:left-10 md:right-10 md:top-10 md:bottom-10 lg:left-[10%] lg:right-[10%] lg:top-[5%] lg:bottom-[5%] bg-background rounded-3xl shadow-2xl overflow-hidden border border-white/10 flex flex-col md:flex-row max-w-7xl mx-auto"
                     >
-                        {/* Close Button */}
-                        <button
-                            onClick={onClose}
-                            className="absolute top-4 right-4 z-50 p-2 bg-black/20 hover:bg-black/40 text-white rounded-full backdrop-blur-md transition-colors"
-                        >
-                            <X className="w-6 h-6" />
-                        </button>
+                        {/* Close & Expand Buttons */}
+                        <div className="absolute top-4 right-4 z-50 flex gap-2">
+                            {onExpand && (
+                                <button
+                                    onClick={() => onExpand(product)}
+                                    className="p-2 bg-black/20 hover:bg-black/40 text-white rounded-full backdrop-blur-md transition-colors"
+                                    title="Modo Catálogo"
+                                >
+                                    <Maximize2 className="w-6 h-6" />
+                                </button>
+                            )}
+                            <button
+                                onClick={() => window.open(`/product/${product.id}`, '_blank')}
+                                className="p-2 bg-black/20 hover:bg-black/40 text-white rounded-full backdrop-blur-md transition-colors"
+                                title="Abrir en nueva pestaña"
+                            >
+                                <ExternalLink className="w-6 h-6" />
+                            </button>
+                            <button
+                                onClick={onClose}
+                                className="p-2 bg-black/20 hover:bg-black/40 text-white rounded-full backdrop-blur-md transition-colors"
+                            >
+                                <X className="w-6 h-6" />
+                            </button>
+                        </div>
 
                         {/* Image Section */}
                         <div className="relative w-full md:w-1/2 h-64 md:h-auto bg-muted">

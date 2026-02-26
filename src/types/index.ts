@@ -17,15 +17,19 @@ export interface Product {
 export interface Kit {
     id: string;
     name: string;
-    type: KitType;
-    total_power: number; // in kW
+    type: KitType | ProductType | string;
+    total_power?: number; // in kW, optional for non-kits
     price: number;
-    monthly_finance_cost: number;
-    description: string;
+    base_price?: number;
+    monthly_finance_cost?: number; // optional for non-kits
+    description?: string;
     image_url: string;
     stock: number;
-    stock_status?: 'in_stock' | 'low_stock' | 'out_of_stock'; // Derived on frontend
+    stock_status?: 'in_stock' | 'low_stock' | 'out_of_stock';
     popularity_score?: number;
+    category_slug?: string;
+    subcategory_slug?: string;
+    specifications?: any;
 }
 
 export interface Lead {

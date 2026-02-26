@@ -5,12 +5,15 @@ import { SolarCalculator } from './components/SolarCalculator';
 import { ProductDetailPage } from './pages/ProductDetailPage';
 import { LoginPage } from './features/auth/pages/LoginPage';
 import { RegisterPage } from './features/auth/pages/RegisterPage';
+import { ForgotPasswordPage } from './features/auth/pages/ForgotPasswordPage';
+import { UpdatePasswordPage } from './features/auth/pages/UpdatePasswordPage';
 import { ProtectedRoute } from './components/layout/ProtectedRoute';
 import { SolarDsmSection } from './features/technology/SolarDsmSection';
 import { ToastProvider } from './components/common/Toast';
-import { InstallerSection } from './components/trust/InstallerSection';
+
 import { CartProvider } from './context/CartContext';
 import { useTranslation } from 'react-i18next';
+import { CartPage } from './pages/CartPage';
 import { LeadFormModal } from './components/common/LeadFormModal';
 import { HeroSection } from './components/layout/HeroSection';
 import { TestimonialsSection } from './components/trust/TestimonialsSection';
@@ -49,8 +52,7 @@ function HomePage() {
           onClose={() => setIsLeadFormOpen(false)}
         />
 
-        {/* Installers Section */}
-        <InstallerSection />
+
 
         {/* Testimonials */}
         <TestimonialsSection />
@@ -115,7 +117,24 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/update-password" element={<UpdatePasswordPage />} />
             <Route path="/product/:id" element={<ProductDetailPage />} />
+            <Route path="/cart" element={<CartPage />} />
+            <Route path="/categoria/:categorySlug" element={
+              <Layout>
+                <div className="container mx-auto px-4 py-24 min-h-screen">
+                  <CatalogSection />
+                </div>
+              </Layout>
+            } />
+            <Route path="/categoria/:categorySlug/:subcategorySlug" element={
+              <Layout>
+                <div className="container mx-auto px-4 py-24 min-h-screen">
+                  <CatalogSection />
+                </div>
+              </Layout>
+            } />
 
             {/* Protected Routes Example */}
             <Route element={<ProtectedRoute />}>

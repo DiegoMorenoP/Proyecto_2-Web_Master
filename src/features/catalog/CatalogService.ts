@@ -41,43 +41,58 @@ const MOCK_KITS: Kit[] = [
 ];
 
 export const CatalogService = {
-    async getKits(): Promise<Kit[]> {
-        const { data, error } = await supabase
-            .from('kits')
-            .select('*')
-            .order('popularity_score', { ascending: false });
+    async getAllCatalog(): Promise<Kit[]> {
+        const [kitsRes, prodsRes] = await Promise.all([
+            supabase.from('kits').select('*'),
+            supabase.from('products').select('*')
+        ]);
+
+        let allItems: any[] = [];
+        if (kitsRes.data) allItems = [...allItems, ...kitsRes.data];
+        if (prodsRes.data) allItems = [...allItems, ...prodsRes.data];
+
+        return allItems.map(formatKitItem).sort((a, b) => (b.popularity_score || 0) - (a.popularity_score || 0));
+    },
+
+    async getKits(categorySlug?: string, subcategorySlug?: string): Promise<Kit[]> {
+        if (!categorySlug && !subcategorySlug) return this.getAllCatalog();
+
+        const table = categorySlug === 'kits-solares' ? 'kits' : 'products';
+        let query = supabase.from(table).select('*');
+
+        if (categorySlug && table === 'products') {
+            query = query.eq('category_slug', categorySlug);
+        }
+        if (subcategorySlug) {
+            query = query.eq('subcategory_slug', subcategorySlug);
+        }
+
+        const { data, error } = await query;
 
         if (error || !data || data.length === 0) {
             console.error('CRITICAL DATABASE ERROR:', error);
-            console.warn('Using mock data because DB is empty or unreachable');
             return MOCK_KITS;
         }
 
-        console.log('Raw DB Kits:', data);
-
-        return data.map((kit: any) => {
-            // Force stock to be a number. Handle strings, nulls, undefined.
-            const rawStock = kit.stock;
-            const stock = typeof rawStock === 'string' ? parseInt(rawStock, 10) : (rawStock ?? 0);
-
-            // Validate parsed stock
-            const finalStock = isNaN(stock) ? 0 : stock;
-
-            let status: 'in_stock' | 'low_stock' | 'out_of_stock' = 'in_stock';
-
-            if (finalStock <= 0) {
-                status = 'out_of_stock';
-            } else if (finalStock <= 5) {
-                status = 'low_stock';
-            }
-
-            // console.log(`Processed Kit: ${kit.name} | Raw Stock: ${rawStock} | Final Stock: ${finalStock} | Status: ${status}`);
-
-            return {
-                ...kit,
-                stock: finalStock,
-                stock_status: status
-            };
-        }) as Kit[];
+        return data.map(formatKitItem);
     }
 };
+
+function formatKitItem(kit: any): Kit {
+    const rawStock = kit.stock;
+    const finalStock = typeof rawStock === 'number' ? rawStock : (typeof rawStock === 'string' ? parseInt(rawStock, 10) : undefined);
+
+    let status: 'in_stock' | 'low_stock' | 'out_of_stock' = kit.stock_status || 'in_stock';
+
+    // Fallback if numeric stock is explicitly specified and we want to enforce it overriding DB
+    if (finalStock !== undefined) {
+        if (finalStock <= 0) status = 'out_of_stock';
+        else if (finalStock <= 5) status = 'low_stock';
+    }
+
+    return {
+        ...kit,
+        stock: finalStock,
+        stock_status: status
+    } as Kit;
+}

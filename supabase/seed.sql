@@ -1,130 +1,120 @@
--- Seed Data for Solar E-commerce MVP
--- Populates: Products, Kits, Kit Items, Leads, Simulations
--- Usage: psql -h localhost -p 54322 -U postgres -d postgres -f supabase/seed.sql
--- Or via Supabase CLI: npx supabase db reset (re-applies migrations and this seed)
-
+-- Seed Data for Solar B2B MV
 BEGIN;
 
--- 1. CLEANUP
 TRUNCATE TABLE "public"."kit_items" CASCADE;
 TRUNCATE TABLE "public"."simulations" CASCADE;
 TRUNCATE TABLE "public"."kits" CASCADE;
+TRUNCATE TABLE "public"."order_items" CASCADE;
+TRUNCATE TABLE "public"."orders" CASCADE;
+TRUNCATE TABLE "public"."documents" CASCADE;
+
 TRUNCATE TABLE "public"."products" CASCADE;
+TRUNCATE TABLE "public"."profiles" CASCADE;
+TRUNCATE TABLE "public"."companies" CASCADE;
 TRUNCATE TABLE "public"."leads" CASCADE;
 
--- 2. PRODUCTS (Panels, Inverters, Batteries) - ~20 Items
-WITH new_products AS (
-    INSERT INTO "public"."products" (name, type, price, voltage, stock_status, image_url, tech_spec_pdf, stock) VALUES 
-    -- Panels
-    ('SunPower Maxeon 6 AC', 'panel', 420.00, 50, 'in_stock', 'https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=800&q=80', 'specs_maxeon6.pdf', 150),
-    ('Longi Hi-MO 5m 540W', 'panel', 245.00, 42, 'in_stock', 'https://images.unsplash.com/photo-1613665813446-82a78c468a1d?auto=format&fit=crop&w=800&q=80', 'specs_himo5.pdf', 85),
-    ('Jinko Solar Tiger Neo', 'panel', 260.00, 44, 'in_stock', 'https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=800&q=80', 'specs_tiger.pdf', 200),
-    ('Canadian Solar BiHiKu7', 'panel', 280.00, 45, 'low_stock', 'https://images.unsplash.com/photo-1559302504-64aae6ca6b6f?auto=format&fit=crop&w=800&q=80', 'specs_bihiku7.pdf', 8),
-    ('Trina Solar Vertex S+', 'panel', 230.00, 40, 'out_of_stock', 'https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=800&q=80', 'specs_vertex.pdf', 0),
-    ('REC Alpha Pure-R', 'panel', 390.00, 48, 'in_stock', 'https://images.unsplash.com/photo-1624397640148-949b1732bb0a?auto=format&fit=crop&w=800&q=80', 'specs_rec.pdf', 45),
-    ('Qcells Q.PEAK DUO', 'panel', 310.00, 43, 'in_stock', 'https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=800&q=80', 'specs_qcells.pdf', 60),
-    
-    -- Inverters
-    ('Huawei SUN2000-5KTL', 'inverter', 1200.00, NULL, 'in_stock', 'https://images.unsplash.com/photo-1558449028-b53a39d100fc?auto=format&fit=crop&w=800&q=80', 'specs_huawei.pdf', 25),
-    ('Fronius Primo 5.0-1', 'inverter', 1450.00, NULL, 'in_stock', 'https://images.unsplash.com/photo-1542336391-ae2936d8efe4?auto=format&fit=crop&w=800&q=80', 'specs_fronius.pdf', 18),
-    ('SMA Sunny Boy 5.0', 'inverter', 1350.00, NULL, 'low_stock', 'https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&w=800&q=80', 'specs_sma.pdf', 4),
-    ('SolarEdge SE5000H', 'inverter', 1600.00, NULL, 'in_stock', 'https://images.unsplash.com/photo-1624397640148-949b1732bb0a?auto=format&fit=crop&w=800&q=80', 'specs_solaredge.pdf', 30),
-    ('Growatt MIN 5000TL-X', 'inverter', 950.00, NULL, 'in_stock', 'https://images.unsplash.com/photo-1558449028-b53a39d100fc?auto=format&fit=crop&w=800&q=80', 'specs_growatt.pdf', 50),
-    
-    -- Batteries
-    ('Tesla Powerwall 2', 'battery', 8500.00, 48, 'in_stock', 'https://images.unsplash.com/photo-1569024733183-40533e4b0930?auto=format&fit=crop&w=800&q=80', 'specs_powerwall.pdf', 12),
-    ('LG Chem RESU 10H', 'battery', 6800.00, 400, 'low_stock', 'https://images.unsplash.com/photo-1569024733183-40533e4b0930?auto=format&fit=crop&w=800&q=80', 'specs_lgchem.pdf', 3),
-    ('BYD Battery-Box Premium', 'battery', 5200.00, 48, 'in_stock', 'https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&w=800&q=80', 'specs_byd.pdf', 15),
-    ('Pylontech US3000C', 'battery', 1500.00, 48, 'in_stock', 'https://images.unsplash.com/photo-1542336391-ae2936d8efe4?auto=format&fit=crop&w=800&q=80', 'specs_pylon.pdf', 40),
-    ('Huawei LUNA2000', 'battery', 4500.00, 360, 'out_of_stock', 'https://images.unsplash.com/photo-1558449028-b53a39d100fc?auto=format&fit=crop&w=800&q=80', 'specs_luna.pdf', 0)
-    
-    RETURNING id, name, type
-),
+INSERT INTO "public"."companies" (cif, name, legal_name, address, city, postal_code, country, phone_number, tier, status) VALUES
+('A12345678', 'SolarInstal Madrid', 'Instalaciones Solares Madrileñas S.A.', 'Calle Gran Vía 12', 'Madrid', '28013', 'España', '+34600100200', 'gold', 'validated'),
+('B87654321', 'EcoEnergia Sur', 'Eco Energía Andalucía S.L.', 'Avenida de la Constitución 4', 'Sevilla', '41004', 'España', '+34600200300', 'silver', 'validated'),
+('C11223344', 'Norte Renovables', 'Norte Renovables Vasco S.L.', 'Gran Vía de Don Diego 20', 'Bilbao', '48001', 'España', '+34600300400', 'bronze', 'pending_validation');
 
--- 3. KITS (Combinations) - ~15 items
-new_kits AS (
-    INSERT INTO "public"."kits" (name, type, total_power, price, monthly_finance_cost, description, image_url, stock) VALUES
-    ('Starter Eco Kit (3kW)', 'grid', 3.0, 4500.00, 45.00, 'Ideal for small apartments or couples. Includes essential panels and efficient inverter.', 'https://images.unsplash.com/photo-1497436072909-60f360e1d4b0?auto=format&fit=crop&w=800&q=80', 5),
-    ('Family Balance Kit (5kW)', 'grid', 5.0, 6800.00, 65.00, 'Perfect for standard families (3-4 people). Covers AC, laundry, and daily appliances.', 'https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=800&q=80', 8),
-    ('Pro Autonomy Pack (8kW)', 'hybrid', 8.0, 12500.00, 120.00, 'Designed for large homes. Includes battery storage for night usage.', 'https://images.unsplash.com/photo-1613665813446-82a78c468a1d?auto=format&fit=crop&w=800&q=80', 12),
-    ('Off-Grid Cabin Essential', 'isolated', 2.5, 5900.00, 58.00, 'Complete independence for remote locations. Heavy-duty batteries included.', 'https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=800&q=80', 3),
-    ('Enterprise Solution (15kW)', 'grid', 15.0, 18900.00, 190.00, 'High efficiency for small businesses or large villas.', 'https://images.unsplash.com/photo-1497436072909-60f360e1d4b0?auto=format&fit=crop&w=800&q=80', 10),
-    ('Tesla Powerwall Bundle', 'hybrid', 6.0, 15500.00, 155.00, 'Premium Tesla backup solution with seamless grid integration.', 'https://images.unsplash.com/photo-1569024733183-40533e4b0930?auto=format&fit=crop&w=800&q=80', 4),
-    ('Budget Friendly 4kW', 'grid', 4.0, 5200.00, 55.00, 'Maximum value for money. Tier 1 panels with standard inverter.', 'https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&w=800&q=80', 15),
-    ('High Efficiency 6kW', 'grid', 6.0, 8900.00, 85.00, 'Uses high-efficiency Maxeon panels for limited roof spaces.', 'https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=800&q=80', 6),
-    ('Hybrid Plus Storage', 'hybrid', 7.5, 13800.00, 135.00, '7.5kW hybrid system with 10kWh storage capacity.', 'https://images.unsplash.com/photo-1613665813446-82a78c468a1d?auto=format&fit=crop&w=800&q=80', 7),
-    ('Micro-Inverter System', 'grid', 4.5, 7200.00, 72.00, 'Optimized performance for shaded roofs using micro-inverters.', 'https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=800&q=80', 9),
-    ('Ultimate Independence', 'isolated', 10.0, 22000.00, 250.00, 'Zero grid reliance. Massive storage and generation capacity.', 'https://images.unsplash.com/photo-1542336391-ae2936d8efe4?auto=format&fit=crop&w=800&q=80', 5),
-    ('Urban Compact Kit', 'grid', 2.0, 3200.00, 35.00, 'Designed for city balconies and small terraced houses.', 'https://images.unsplash.com/photo-1497436072909-60f360e1d4b0?auto=format&fit=crop&w=800&q=80', 11),
-    ('Smart Home Solar', 'hybrid', 5.0, 11000.00, 110.00, 'Integrated with smart home energy manager.', 'https://images.unsplash.com/photo-1558449028-b53a39d100fc?auto=format&fit=crop&w=800&q=80', 8),
-    ('Agricultural Pump Kit', 'isolated', 4.0, 6500.00, 65.00, 'Specialized for running water pumps in remote fields.', 'https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=800&q=80', 6),
-    ('Weekend Cabin Kit', 'isolated', 1.5, 2500.00, 25.00, 'Small system for lighting and fridge during weekends.', 'https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&w=800&q=80', 10)
+INSERT INTO "public"."products" (name, type, price, base_price, sku, pack_quantity, voltage, stock_status, image_url, category_slug, subcategory_slug, specifications) VALUES 
+('Panel Solar Monocristalino Pro 450W - Pallet', 'panel', 6500, 6500, 'PNL-PRO-450-PLT', 30, 48, 'in_stock', 'https://images.unsplash.com/photo-1584283592683-176f1c4df762?auto=format&fit=crop&w=800&q=80', 'paneles-solares', 'monocristalinos', '{"potencia":"450W","tecnologia":"Monocristalino PERC","dimensiones":"2094 x 1038 x 35 mm","peso":"23.5 kg","garantia":"25 años"}'),
+('Panel Solar Monocristalino Pro 460W - Pallet', 'panel', 6650, 6650, 'PNL-PRO-460-PLT', 30, 48, 'in_stock', 'https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=800&q=80', 'paneles-solares', 'monocristalinos', '{"potencia":"460W","tecnologia":"Monocristalino PERC","dimensiones":"2094 x 1038 x 35 mm","peso":"23.5 kg","garantia":"25 años"}'),
+('Panel Solar Monocristalino Pro 470W - Pallet', 'panel', 6800, 6800, 'PNL-PRO-470-PLT', 30, 48, 'in_stock', 'https://images.unsplash.com/photo-1548324546-f8f411db18b1?auto=format&fit=crop&w=800&q=80', 'paneles-solares', 'monocristalinos', '{"potencia":"470W","tecnologia":"Monocristalino PERC","dimensiones":"2094 x 1038 x 35 mm","peso":"23.5 kg","garantia":"25 años"}'),
+('Panel Solar Monocristalino Pro 480W - Pallet', 'panel', 6950, 6950, 'PNL-PRO-480-PLT', 30, 48, 'out_of_stock', 'https://images.unsplash.com/photo-1613665813446-82a78c468a1d?auto=format&fit=crop&w=800&q=80', 'paneles-solares', 'monocristalinos', '{"potencia":"480W","tecnologia":"Monocristalino PERC","dimensiones":"2094 x 1038 x 35 mm","peso":"23.5 kg","garantia":"25 años"}'),
+('Panel Solar Monocristalino Pro 490W - Pallet', 'panel', 7100, 7100, 'PNL-PRO-490-PLT', 30, 48, 'in_stock', 'https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=800&q=80', 'paneles-solares', 'monocristalinos', '{"potencia":"490W","tecnologia":"Monocristalino PERC","dimensiones":"2094 x 1038 x 35 mm","peso":"23.5 kg","garantia":"25 años"}'),
+('Panel Solar Monocristalino Pro 500W - Pallet', 'panel', 7250, 7250, 'PNL-PRO-500-PLT', 30, 48, 'in_stock', 'https://images.unsplash.com/photo-1559302504-64aae6ca6b6f?auto=format&fit=crop&w=800&q=80', 'paneles-solares', 'monocristalinos', '{"potencia":"500W","tecnologia":"Monocristalino PERC","dimensiones":"2094 x 1038 x 35 mm","peso":"23.5 kg","garantia":"25 años"}'),
+('Panel Solar Monocristalino Pro 510W - Pallet', 'panel', 7400, 7400, 'PNL-PRO-510-PLT', 30, 48, 'in_stock', 'https://images.unsplash.com/photo-1584283592683-176f1c4df762?auto=format&fit=crop&w=800&q=80', 'paneles-solares', 'monocristalinos', '{"potencia":"510W","tecnologia":"Monocristalino PERC","dimensiones":"2094 x 1038 x 35 mm","peso":"23.5 kg","garantia":"25 años"}'),
+('Panel Solar Monocristalino Pro 520W - Pallet', 'panel', 7550, 7550, 'PNL-PRO-520-PLT', 30, 48, 'in_stock', 'https://images.unsplash.com/photo-1624397640148-949b1732bb0a?auto=format&fit=crop&w=800&q=80', 'paneles-solares', 'monocristalinos', '{"potencia":"520W","tecnologia":"Monocristalino PERC","dimensiones":"2094 x 1038 x 35 mm","peso":"23.5 kg","garantia":"25 años"}'),
+('Panel Solar Monocristalino Pro 530W - Pallet', 'panel', 7700, 7700, 'PNL-PRO-530-PLT', 30, 48, 'in_stock', 'https://images.unsplash.com/photo-1497441528643-fc05ea4b5f90?auto=format&fit=crop&w=800&q=80', 'paneles-solares', 'monocristalinos', '{"potencia":"530W","tecnologia":"Monocristalino PERC","dimensiones":"2094 x 1038 x 35 mm","peso":"23.5 kg","garantia":"25 años"}'),
+('Panel Solar Monocristalino Pro 540W - Pallet', 'panel', 7850, 7850, 'PNL-PRO-540-PLT', 30, 48, 'in_stock', 'https://images.unsplash.com/photo-1542336391-ae2936d8efe4?auto=format&fit=crop&w=800&q=80', 'paneles-solares', 'monocristalinos', '{"potencia":"540W","tecnologia":"Monocristalino PERC","dimensiones":"2094 x 1038 x 35 mm","peso":"23.5 kg","garantia":"25 años"}'),
+('Panel Solar Monocristalino Pro 550W - Pallet', 'panel', 8000, 8000, 'PNL-PRO-550-PLT', 30, 48, 'in_stock', 'https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&w=800&q=80', 'paneles-solares', 'monocristalinos', '{"potencia":"550W","tecnologia":"Monocristalino PERC","dimensiones":"2094 x 1038 x 35 mm","peso":"23.5 kg","garantia":"25 años"}'),
+('Panel Solar Monocristalino Pro 560W - Pallet', 'panel', 8150, 8150, 'PNL-PRO-560-PLT', 30, 48, 'in_stock', 'https://images.unsplash.com/photo-1613665813446-82a78c468a1d?auto=format&fit=crop&w=800&q=80', 'paneles-solares', 'monocristalinos', '{"potencia":"560W","tecnologia":"Monocristalino PERC","dimensiones":"2094 x 1038 x 35 mm","peso":"23.5 kg","garantia":"25 años"}'),
+('Inversor B2B Serie Aislada 5kW', 'inverter', 1100, 1100, 'INV-B2B-5K-0', 1, NULL, 'in_stock', 'https://images.unsplash.com/photo-1558449028-b53a39d100fc?auto=format&fit=crop&w=800&q=80', 'inversores', 'aislada', '{"potencia_nominal":"5kW","mppt":2,"eficiencia":"98.5%","tipo_onda":"Senoidal Pura","proteccion_ip":"IP65"}'),
+('Inversor B2B Serie Aislada 6kW', 'inverter', 1180, 1180, 'INV-B2B-6K-1', 1, NULL, 'in_stock', 'https://images.unsplash.com/photo-1521639731633-82a88ac4fca1?auto=format&fit=crop&w=800&q=80', 'inversores', 'aislada', '{"potencia_nominal":"6kW","mppt":3,"eficiencia":"98.5%","tipo_onda":"Senoidal Pura","proteccion_ip":"IP65"}'),
+('Inversor B2B Serie Aislada 7kW', 'inverter', 1260, 1260, 'INV-B2B-7K-2', 1, NULL, 'in_stock', 'https://images.unsplash.com/photo-1624397640148-949b1732bb0a?auto=format&fit=crop&w=800&q=80', 'inversores', 'aislada', '{"potencia_nominal":"7kW","mppt":2,"eficiencia":"98.5%","tipo_onda":"Senoidal Pura","proteccion_ip":"IP65"}'),
+('Inversor B2B Serie Aislada 8kW', 'inverter', 1340, 1340, 'INV-B2B-8K-3', 1, NULL, 'in_stock', 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=800&q=80', 'inversores', 'aislada', '{"potencia_nominal":"8kW","mppt":3,"eficiencia":"98.5%","tipo_onda":"Senoidal Pura","proteccion_ip":"IP65"}'),
+('Inversor B2B Serie Aislada 9kW', 'inverter', 1420, 1420, 'INV-B2B-9K-4', 1, NULL, 'out_of_stock', 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80', 'inversores', 'aislada', '{"potencia_nominal":"9kW","mppt":2,"eficiencia":"98.5%","tipo_onda":"Senoidal Pura","proteccion_ip":"IP65"}'),
+('Inversor B2B Serie Red 10kW', 'inverter', 1500, 1500, 'INV-B2B-10K-5', 1, NULL, 'in_stock', 'https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=800&q=80', 'inversores', 'red', '{"potencia_nominal":"10kW","mppt":3,"eficiencia":"98.5%","tipo_onda":"Senoidal Pura","proteccion_ip":"IP65"}'),
+('Inversor B2B Serie Red 11kW', 'inverter', 1580, 1580, 'INV-B2B-11K-6', 1, NULL, 'in_stock', 'https://images.unsplash.com/photo-1517420704952-d9f397412fc6?auto=format&fit=crop&w=800&q=80', 'inversores', 'red', '{"potencia_nominal":"11kW","mppt":2,"eficiencia":"98.5%","tipo_onda":"Senoidal Pura","proteccion_ip":"IP65"}'),
+('Inversor B2B Serie Red 12kW', 'inverter', 1660, 1660, 'INV-B2B-12K-7', 1, NULL, 'in_stock', 'https://images.unsplash.com/photo-1497436072909-60f360e1d4b0?auto=format&fit=crop&w=800&q=80', 'inversores', 'red', '{"potencia_nominal":"12kW","mppt":3,"eficiencia":"98.5%","tipo_onda":"Senoidal Pura","proteccion_ip":"IP65"}'),
+('Inversor B2B Serie Red 13kW', 'inverter', 1740, 1740, 'INV-B2B-13K-8', 1, NULL, 'out_of_stock', 'https://images.unsplash.com/photo-1558449028-b53a39d100fc?auto=format&fit=crop&w=800&q=80', 'inversores', 'red', '{"potencia_nominal":"13kW","mppt":2,"eficiencia":"98.5%","tipo_onda":"Senoidal Pura","proteccion_ip":"IP65"}'),
+('Inversor B2B Serie Red 14kW', 'inverter', 1820, 1820, 'INV-B2B-14K-9', 1, NULL, 'in_stock', 'https://images.unsplash.com/photo-1542336391-ae2936d8efe4?auto=format&fit=crop&w=800&q=80', 'inversores', 'red', '{"potencia_nominal":"14kW","mppt":3,"eficiencia":"98.5%","tipo_onda":"Senoidal Pura","proteccion_ip":"IP65"}'),
+('Inversor B2B Serie Híbrido 15kW', 'inverter', 1900, 1900, 'INV-B2B-15K-10', 1, NULL, 'in_stock', 'https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=800&q=80', 'inversores', 'hibridos', '{"potencia_nominal":"15kW","mppt":2,"eficiencia":"98.5%","tipo_onda":"Senoidal Pura","proteccion_ip":"IP65"}'),
+('Inversor B2B Serie Híbrido 16kW', 'inverter', 1980, 1980, 'INV-B2B-16K-11', 1, NULL, 'in_stock', 'https://images.unsplash.com/photo-1613665813446-82a78c468a1d?auto=format&fit=crop&w=800&q=80', 'inversores', 'hibridos', '{"potencia_nominal":"16kW","mppt":3,"eficiencia":"98.5%","tipo_onda":"Senoidal Pura","proteccion_ip":"IP65"}'),
+('Inversor B2B Serie Híbrido 17kW', 'inverter', 2060, 2060, 'INV-B2B-17K-12', 1, NULL, 'out_of_stock', 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=800&q=80', 'inversores', 'hibridos', '{"potencia_nominal":"17kW","mppt":2,"eficiencia":"98.5%","tipo_onda":"Senoidal Pura","proteccion_ip":"IP65"}'),
+('Inversor B2B Serie Híbrido 18kW', 'inverter', 2140, 2140, 'INV-B2B-18K-13', 1, NULL, 'in_stock', 'https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&w=800&q=80', 'inversores', 'hibridos', '{"potencia_nominal":"18kW","mppt":3,"eficiencia":"98.5%","tipo_onda":"Senoidal Pura","proteccion_ip":"IP65"}'),
+('Batería Industrial LITIO 100Ah', 'battery', 800, 800, 'BAT-litio-100', 1, 48, 'in_stock', 'https://images.unsplash.com/photo-1569024733183-40533e4b0930?auto=format&fit=crop&w=800&q=80', 'baterias-solares', 'litio', '{"capacidad":"100Ah","ciclos_vida":">6000","tecnologia":"LITIO","voltaje_nominal":"48V"}'),
+('Batería Industrial LITIO 150Ah', 'battery', 1200, 1200, 'BAT-litio-150', 1, 48, 'out_of_stock', 'https://images.unsplash.com/photo-1620916297397-a4a5402a3c6c?auto=format&fit=crop&w=800&q=80', 'baterias-solares', 'litio', '{"capacidad":"150Ah","ciclos_vida":">6000","tecnologia":"LITIO","voltaje_nominal":"48V"}'),
+('Batería Industrial LITIO 200Ah', 'battery', 1600, 1600, 'BAT-litio-200', 1, 48, 'in_stock', 'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?auto=format&fit=crop&w=800&q=80', 'baterias-solares', 'litio', '{"capacidad":"200Ah","ciclos_vida":">6000","tecnologia":"LITIO","voltaje_nominal":"48V"}'),
+('Batería Industrial OPZS 100Ah', 'battery', 800, 800, 'BAT-opzs-100', 1, 48, 'in_stock', 'https://images.unsplash.com/photo-1555523177-3e15772ef9fb?auto=format&fit=crop&w=800&q=80', 'baterias-solares', 'opzs', '{"capacidad":"100Ah","ciclos_vida":">1500","tecnologia":"OPZS","voltaje_nominal":"48V"}'),
+('Batería Industrial OPZS 150Ah', 'battery', 1200, 1200, 'BAT-opzs-150', 1, 48, 'out_of_stock', 'https://images.unsplash.com/photo-1569024733183-40533e4b0930?auto=format&fit=crop&w=800&q=80', 'baterias-solares', 'opzs', '{"capacidad":"150Ah","ciclos_vida":">1500","tecnologia":"OPZS","voltaje_nominal":"48V"}'),
+('Batería Industrial OPZS 200Ah', 'battery', 1600, 1600, 'BAT-opzs-200', 1, 48, 'in_stock', 'https://images.unsplash.com/photo-1620916297397-a4a5402a3c6c?auto=format&fit=crop&w=800&q=80', 'baterias-solares', 'opzs', '{"capacidad":"200Ah","ciclos_vida":">1500","tecnologia":"OPZS","voltaje_nominal":"48V"}'),
+('Batería Industrial UOPZS 100Ah', 'battery', 800, 800, 'BAT-uopzs-100', 1, 48, 'in_stock', 'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?auto=format&fit=crop&w=800&q=80', 'baterias-solares', 'uopzs', '{"capacidad":"100Ah","ciclos_vida":">1500","tecnologia":"UOPZS","voltaje_nominal":"48V"}'),
+('Batería Industrial UOPZS 150Ah', 'battery', 1200, 1200, 'BAT-uopzs-150', 1, 48, 'out_of_stock', 'https://images.unsplash.com/photo-1555523177-3e15772ef9fb?auto=format&fit=crop&w=800&q=80', 'baterias-solares', 'uopzs', '{"capacidad":"150Ah","ciclos_vida":">1500","tecnologia":"UOPZS","voltaje_nominal":"48V"}'),
+('Batería Industrial UOPZS 200Ah', 'battery', 1600, 1600, 'BAT-uopzs-200', 1, 48, 'in_stock', 'https://images.unsplash.com/photo-1569024733183-40533e4b0930?auto=format&fit=crop&w=800&q=80', 'baterias-solares', 'uopzs', '{"capacidad":"200Ah","ciclos_vida":">1500","tecnologia":"UOPZS","voltaje_nominal":"48V"}'),
+('Batería Industrial OPZV 100Ah', 'battery', 800, 800, 'BAT-opzv-100', 1, 48, 'in_stock', 'https://images.unsplash.com/photo-1620916297397-a4a5402a3c6c?auto=format&fit=crop&w=800&q=80', 'baterias-solares', 'opzv', '{"capacidad":"100Ah","ciclos_vida":">1500","tecnologia":"OPZV","voltaje_nominal":"48V"}'),
+('Batería Industrial OPZV 150Ah', 'battery', 1200, 1200, 'BAT-opzv-150', 1, 48, 'out_of_stock', 'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?auto=format&fit=crop&w=800&q=80', 'baterias-solares', 'opzv', '{"capacidad":"150Ah","ciclos_vida":">1500","tecnologia":"OPZV","voltaje_nominal":"48V"}'),
+('Batería Industrial OPZV 200Ah', 'battery', 1600, 1600, 'BAT-opzv-200', 1, 48, 'in_stock', 'https://images.unsplash.com/photo-1555523177-3e15772ef9fb?auto=format&fit=crop&w=800&q=80', 'baterias-solares', 'opzv', '{"capacidad":"200Ah","ciclos_vida":">1500","tecnologia":"OPZV","voltaje_nominal":"48V"}'),
+('Batería Industrial AGM 100Ah', 'battery', 800, 800, 'BAT-agm-100', 1, 48, 'in_stock', 'https://images.unsplash.com/photo-1569024733183-40533e4b0930?auto=format&fit=crop&w=800&q=80', 'baterias-solares', 'agm', '{"capacidad":"100Ah","ciclos_vida":">1500","tecnologia":"AGM","voltaje_nominal":"48V"}'),
+('Batería Industrial AGM 150Ah', 'battery', 1200, 1200, 'BAT-agm-150', 1, 48, 'out_of_stock', 'https://images.unsplash.com/photo-1620916297397-a4a5402a3c6c?auto=format&fit=crop&w=800&q=80', 'baterias-solares', 'agm', '{"capacidad":"150Ah","ciclos_vida":">1500","tecnologia":"AGM","voltaje_nominal":"48V"}'),
+('Batería Industrial AGM 200Ah', 'battery', 1600, 1600, 'BAT-agm-200', 1, 48, 'in_stock', 'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?auto=format&fit=crop&w=800&q=80', 'baterias-solares', 'agm', '{"capacidad":"200Ah","ciclos_vida":">1500","tecnologia":"AGM","voltaje_nominal":"48V"}'),
+('Batería Industrial MONOBLOCK 100Ah', 'battery', 800, 800, 'BAT-monoblock-100', 1, 48, 'in_stock', 'https://images.unsplash.com/photo-1555523177-3e15772ef9fb?auto=format&fit=crop&w=800&q=80', 'baterias-solares', 'monoblock', '{"capacidad":"100Ah","ciclos_vida":">1500","tecnologia":"MONOBLOCK","voltaje_nominal":"48V"}'),
+('Batería Industrial MONOBLOCK 150Ah', 'battery', 1200, 1200, 'BAT-monoblock-150', 1, 48, 'out_of_stock', 'https://images.unsplash.com/photo-1569024733183-40533e4b0930?auto=format&fit=crop&w=800&q=80', 'baterias-solares', 'monoblock', '{"capacidad":"150Ah","ciclos_vida":">1500","tecnologia":"MONOBLOCK","voltaje_nominal":"48V"}'),
+('Batería Industrial MONOBLOCK 200Ah', 'battery', 1600, 1600, 'BAT-monoblock-200', 1, 48, 'in_stock', 'https://images.unsplash.com/photo-1620916297397-a4a5402a3c6c?auto=format&fit=crop&w=800&q=80', 'baterias-solares', 'monoblock', '{"capacidad":"200Ah","ciclos_vida":">1500","tecnologia":"MONOBLOCK","voltaje_nominal":"48V"}'),
+('Batería Industrial GEL 100Ah', 'battery', 800, 800, 'BAT-gel-100', 1, 48, 'in_stock', 'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?auto=format&fit=crop&w=800&q=80', 'baterias-solares', 'gel', '{"capacidad":"100Ah","ciclos_vida":">1500","tecnologia":"GEL","voltaje_nominal":"48V"}'),
+('Batería Industrial GEL 150Ah', 'battery', 1200, 1200, 'BAT-gel-150', 1, 48, 'in_stock', 'https://images.unsplash.com/photo-1555523177-3e15772ef9fb?auto=format&fit=crop&w=800&q=80', 'baterias-solares', 'gel', '{"capacidad":"150Ah","ciclos_vida":">1500","tecnologia":"GEL","voltaje_nominal":"48V"}'),
+('Batería Industrial GEL 200Ah', 'battery', 1600, 1600, 'BAT-gel-200', 1, 48, 'out_of_stock', 'https://images.unsplash.com/photo-1569024733183-40533e4b0930?auto=format&fit=crop&w=800&q=80', 'baterias-solares', 'gel', '{"capacidad":"200Ah","ciclos_vida":">1500","tecnologia":"GEL","voltaje_nominal":"48V"}'),
+('Accesorio CHAPA Mod 1', 'panel', 50, 50, 'ACC-chapa-1', 1, NULL, 'in_stock', 'https://images.unsplash.com/photo-1534353435422-55fb8159b3da?auto=format&fit=crop&w=800&q=80', 'estructuras', 'chapa', '{"material":"Aluminio Anodizado","compatibilidad":"Universal","garantia":"10 años"}'),
+('Accesorio CHAPA Mod 2', 'panel', 70, 70, 'ACC-chapa-2', 1, NULL, 'out_of_stock', 'https://images.unsplash.com/photo-1503708928676-1cb796a0891e?auto=format&fit=crop&w=800&q=80', 'estructuras', 'chapa', '{"material":"Aluminio Anodizado","compatibilidad":"Universal","garantia":"10 años"}'),
+('Accesorio CHAPA Mod 3', 'panel', 90, 90, 'ACC-chapa-3', 1, NULL, 'in_stock', 'https://images.unsplash.com/photo-1581092580497-69c5e3f421f5?auto=format&fit=crop&w=800&q=80', 'estructuras', 'chapa', '{"material":"Aluminio Anodizado","compatibilidad":"Universal","garantia":"10 años"}'),
+('Accesorio TEJA Mod 4', 'panel', 50, 50, 'ACC-teja-4', 1, NULL, 'in_stock', 'https://images.unsplash.com/photo-1621252178304-4f51fae01f66?auto=format&fit=crop&w=800&q=80', 'estructuras', 'teja', '{"material":"Aluminio Anodizado","compatibilidad":"Universal","garantia":"10 años"}'),
+('Accesorio TEJA Mod 5', 'panel', 70, 70, 'ACC-teja-5', 1, NULL, 'out_of_stock', 'https://images.unsplash.com/photo-1601618845209-411bd074f0a2?auto=format&fit=crop&w=800&q=80', 'estructuras', 'teja', '{"material":"Aluminio Anodizado","compatibilidad":"Universal","garantia":"10 años"}'),
+('Accesorio TEJA Mod 6', 'panel', 90, 90, 'ACC-teja-6', 1, NULL, 'in_stock', 'https://images.unsplash.com/photo-1594950294719-21665a317765?auto=format&fit=crop&w=800&q=80', 'estructuras', 'teja', '{"material":"Aluminio Anodizado","compatibilidad":"Universal","garantia":"10 años"}'),
+('Accesorio INCLINACION Mod 7', 'panel', 50, 50, 'ACC-inclinacion-7', 1, NULL, 'in_stock', 'https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&w=800&q=80', 'estructuras', 'inclinacion', '{"material":"Aluminio Anodizado","compatibilidad":"Universal","garantia":"10 años"}'),
+('Accesorio INCLINACION Mod 8', 'panel', 70, 70, 'ACC-inclinacion-8', 1, NULL, 'in_stock', 'https://images.unsplash.com/photo-1613665813446-82a78c468a1d?auto=format&fit=crop&w=800&q=80', 'estructuras', 'inclinacion', '{"material":"Aluminio Anodizado","compatibilidad":"Universal","garantia":"10 años"}'),
+('Accesorio INCLINACION Mod 9', 'panel', 90, 90, 'ACC-inclinacion-9', 1, NULL, 'out_of_stock', 'https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=800&q=80', 'estructuras', 'inclinacion', '{"material":"Aluminio Anodizado","compatibilidad":"Universal","garantia":"10 años"}'),
+('Accesorio ELEVADAS Mod 10', 'panel', 50, 50, 'ACC-elevadas-10', 1, NULL, 'in_stock', 'https://images.unsplash.com/photo-1497441528643-fc05ea4b5f90?auto=format&fit=crop&w=800&q=80', 'estructuras', 'elevadas', '{"material":"Aluminio Anodizado","compatibilidad":"Universal","garantia":"10 años"}'),
+('Accesorio ELEVADAS Mod 11', 'panel', 70, 70, 'ACC-elevadas-11', 1, NULL, 'out_of_stock', 'https://images.unsplash.com/photo-1542336391-ae2936d8efe4?auto=format&fit=crop&w=800&q=80', 'estructuras', 'elevadas', '{"material":"Aluminio Anodizado","compatibilidad":"Universal","garantia":"10 años"}'),
+('Accesorio ELEVADAS Mod 12', 'panel', 90, 90, 'ACC-elevadas-12', 1, NULL, 'in_stock', 'https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=800&q=80', 'estructuras', 'elevadas', '{"material":"Aluminio Anodizado","compatibilidad":"Universal","garantia":"10 años"}'),
+('Accesorio CUADROS Mod 13', 'panel', 50, 50, 'ACC-cuadros-13', 1, NULL, 'in_stock', 'https://images.unsplash.com/photo-1581092336365-18451b681944?auto=format&fit=crop&w=800&q=80', 'estructuras', 'cuadros', '{"material":"Aluminio Anodizado","compatibilidad":"Universal","garantia":"10 años"}'),
+('Accesorio CUADROS Mod 14', 'panel', 70, 70, 'ACC-cuadros-14', 1, NULL, 'in_stock', 'https://images.unsplash.com/photo-1581092580497-69c5e3f421f5?auto=format&fit=crop&w=800&q=80', 'estructuras', 'cuadros', '{"material":"Aluminio Anodizado","compatibilidad":"Universal","garantia":"10 años"}'),
+('Accesorio CUADROS Mod 15', 'panel', 90, 90, 'ACC-cuadros-15', 1, NULL, 'out_of_stock', 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=800&q=80', 'estructuras', 'cuadros', '{"material":"Aluminio Anodizado","compatibilidad":"Universal","garantia":"10 años"}'),
+('Accesorio GENERADORES-GASOLINA Mod 16', 'panel', 50, 50, 'ACC-generadores-gasolina-16', 1, NULL, 'out_of_stock', 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=800&q=80', 'accesorios', 'generadores-gasolina', '{"material":"Aluminio Anodizado","compatibilidad":"Universal","garantia":"10 años"}'),
+('Accesorio GENERADORES-GASOLINA Mod 17', 'panel', 70, 70, 'ACC-generadores-gasolina-17', 1, NULL, 'in_stock', 'https://images.unsplash.com/photo-1534353435422-55fb8159b3da?auto=format&fit=crop&w=800&q=80', 'accesorios', 'generadores-gasolina', '{"material":"Aluminio Anodizado","compatibilidad":"Universal","garantia":"10 años"}'),
+('Accesorio GENERADORES-GASOLINA Mod 18', 'panel', 90, 90, 'ACC-generadores-gasolina-18', 1, NULL, 'in_stock', 'https://images.unsplash.com/photo-1503708928676-1cb796a0891e?auto=format&fit=crop&w=800&q=80', 'accesorios', 'generadores-gasolina', '{"material":"Aluminio Anodizado","compatibilidad":"Universal","garantia":"10 años"}'),
+('Regulador MPPT B2B 30A', 'inverter', 150, 150, 'REG-MPPT-30', 1, NULL, 'in_stock', 'https://images.unsplash.com/photo-1581092336365-18451b681944?auto=format&fit=crop&w=800&q=80', 'reguladores', 'carga', '{"corriente_max":"30A","voltaje_bateria":"12V/24V/48V Auto","eficiencia_rastreo":"99.9%"}'),
+('Regulador MPPT B2B 40A', 'inverter', 170, 170, 'REG-MPPT-40', 1, NULL, 'in_stock', 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=800&q=80', 'reguladores', 'carga', '{"corriente_max":"40A","voltaje_bateria":"12V/24V/48V Auto","eficiencia_rastreo":"99.9%"}'),
+('Regulador MPPT B2B 50A', 'inverter', 190, 190, 'REG-MPPT-50', 1, NULL, 'in_stock', 'https://images.unsplash.com/photo-1521639731633-82a88ac4fca1?auto=format&fit=crop&w=800&q=80', 'reguladores', 'carga', '{"corriente_max":"50A","voltaje_bateria":"12V/24V/48V Auto","eficiencia_rastreo":"99.9%"}'),
+('Regulador MPPT B2B 60A', 'inverter', 210, 210, 'REG-MPPT-60', 1, NULL, 'out_of_stock', 'https://images.unsplash.com/photo-1558449028-b53a39d100fc?auto=format&fit=crop&w=800&q=80', 'reguladores', 'carga', '{"corriente_max":"60A","voltaje_bateria":"12V/24V/48V Auto","eficiencia_rastreo":"99.9%"}'),
+('Regulador MPPT B2B 70A', 'inverter', 230, 230, 'REG-MPPT-70', 1, NULL, 'in_stock', 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80', 'reguladores', 'carga', '{"corriente_max":"70A","voltaje_bateria":"12V/24V/48V Auto","eficiencia_rastreo":"99.9%"}'),
+('Regulador MPPT B2B 80A', 'inverter', 250, 250, 'REG-MPPT-80', 1, NULL, 'in_stock', 'https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=800&q=80', 'reguladores', 'carga', '{"corriente_max":"80A","voltaje_bateria":"12V/24V/48V Auto","eficiencia_rastreo":"99.9%"}'),
+('Regulador MPPT B2B 90A', 'inverter', 270, 270, 'REG-MPPT-90', 1, NULL, 'in_stock', 'https://images.unsplash.com/photo-1517420704952-d9f397412fc6?auto=format&fit=crop&w=800&q=80', 'reguladores', 'carga', '{"corriente_max":"90A","voltaje_bateria":"12V/24V/48V Auto","eficiencia_rastreo":"99.9%"}'),
+('Regulador MPPT B2B 100A', 'inverter', 290, 290, 'REG-MPPT-100', 1, NULL, 'in_stock', 'https://images.unsplash.com/photo-1581092580497-69c5e3f421f5?auto=format&fit=crop&w=800&q=80', 'reguladores', 'carga', '{"corriente_max":"100A","voltaje_bateria":"12V/24V/48V Auto","eficiencia_rastreo":"99.9%"}'),
+('Regulador MPPT B2B 110A', 'inverter', 310, 310, 'REG-MPPT-110', 1, NULL, 'out_of_stock', 'https://images.unsplash.com/photo-1581092336365-18451b681944?auto=format&fit=crop&w=800&q=80', 'reguladores', 'carga', '{"corriente_max":"110A","voltaje_bateria":"12V/24V/48V Auto","eficiencia_rastreo":"99.9%"}'),
+('Regulador MPPT B2B 120A', 'inverter', 330, 330, 'REG-MPPT-120', 1, NULL, 'in_stock', 'https://images.unsplash.com/photo-1558449028-b53a39d100fc?auto=format&fit=crop&w=800&q=80', 'reguladores', 'carga', '{"corriente_max":"120A","voltaje_bateria":"12V/24V/48V Auto","eficiencia_rastreo":"99.9%"}'),
+('Regulador MPPT B2B 130A', 'inverter', 350, 350, 'REG-MPPT-130', 1, NULL, 'in_stock', 'https://images.unsplash.com/photo-1521639731633-82a88ac4fca1?auto=format&fit=crop&w=800&q=80', 'reguladores', 'carga', '{"corriente_max":"130A","voltaje_bateria":"12V/24V/48V Auto","eficiencia_rastreo":"99.9%"}'),
+('Regulador MPPT B2B 140A', 'inverter', 370, 370, 'REG-MPPT-140', 1, NULL, 'in_stock', 'https://images.unsplash.com/photo-1624397640148-949b1732bb0a?auto=format&fit=crop&w=800&q=80', 'reguladores', 'carga', '{"corriente_max":"140A","voltaje_bateria":"12V/24V/48V Auto","eficiencia_rastreo":"99.9%"}');
 
-    RETURNING id, name, price
-),
 
--- 4. KIT ITEMS (Linking Kits to Products)
-kit_composition AS (
-    INSERT INTO "public"."kit_items" (kit_id, product_id, quantity)
-    SELECT 
-        k.id as kit_id,
-        p.id as product_id,
-        CASE 
-            WHEN p.type = 'panel' THEN floor(random() * 10 + 4)::int
-            WHEN p.type = 'inverter' THEN 1
-            WHEN p.type = 'battery' THEN floor(random() * 2 + 1)::int
-            ELSE 1
-        END as quantity
-    FROM new_kits k
-    JOIN new_products p ON (
-        (k.name LIKE '%Eco%' AND p.name LIKE '%Longi%') OR
-        (k.name LIKE '%Plus%' AND p.name LIKE '%Trina%') OR
-        (k.name LIKE '%Pro%' AND p.name LIKE '%SunPower%') OR
-        (p.type = 'inverter' AND p.name LIKE '%Huawei%' AND k.name LIKE '%Kit%') OR
-        (p.type = 'inverter' AND p.name LIKE '%Fronius%' AND k.name LIKE '%Pack%') OR
-        (p.type = 'battery' AND k.name LIKE '%Autonomy%') OR
-        (p.type = 'battery' AND k.name LIKE '%Tesla%')
-    )
-    ON CONFLICT DO NOTHING
-),
+INSERT INTO "public"."kits" (name, type, total_power, price, monthly_finance_cost, description, image_url, category_slug, subcategory_slug, specifications) VALUES 
+('Kit B2B Instalador isolated Mod 1', 'isolated', 3.5, 2900, 35, 'Kit B2B completo especialmente diseñado para instalaciones rápidas.', 'https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=800&q=80', 'kits-solares', 'vivienda-aislada', '{"potencia_total":"3.5kW","tiempo_instalacion":"8h","incluye_estructura":"Sí"}'),
+('Kit B2B Instalador isolated Mod 2', 'isolated', 4, 3300, 40, 'Kit B2B completo especialmente diseñado para instalaciones rápidas.', 'https://images.unsplash.com/photo-1497441528643-fc05ea4b5f90?auto=format&fit=crop&w=800&q=80', 'kits-solares', 'vivienda-aislada', '{"potencia_total":"4kW","tiempo_instalacion":"8h","incluye_estructura":"Sí"}'),
+('Kit B2B Instalador isolated Mod 3', 'isolated', 4.5, 3700, 45, 'Kit B2B completo especialmente diseñado para instalaciones rápidas.', 'https://images.unsplash.com/photo-1613665813446-82a78c468a1d?auto=format&fit=crop&w=800&q=80', 'kits-solares', 'vivienda-aislada', '{"potencia_total":"4.5kW","tiempo_instalacion":"8h","incluye_estructura":"Sí"}'),
+('Kit B2B Instalador isolated Mod 4', 'isolated', 5, 4100, 50, 'Kit B2B completo especialmente diseñado para instalaciones rápidas.', 'https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=800&q=80', 'kits-solares', 'vivienda-aislada', '{"potencia_total":"5kW","tiempo_instalacion":"8h","incluye_estructura":"Sí"}'),
+('Kit B2B Instalador grid Mod 5', 'grid', 5.5, 4500, 55, 'Kit B2B completo especialmente diseñado para instalaciones rápidas.', 'https://images.unsplash.com/photo-1542336391-ae2936d8efe4?auto=format&fit=crop&w=800&q=80', 'kits-solares', 'autoconsumo-red', '{"potencia_total":"5.5kW","tiempo_instalacion":"8h","incluye_estructura":"Sí"}'),
+('Kit B2B Instalador grid Mod 6', 'grid', 6, 4900, 60, 'Kit B2B completo especialmente diseñado para instalaciones rápidas.', 'https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&w=800&q=80', 'kits-solares', 'autoconsumo-red', '{"potencia_total":"6kW","tiempo_instalacion":"8h","incluye_estructura":"Sí"}'),
+('Kit B2B Instalador grid Mod 7', 'grid', 6.5, 5300, 65, 'Kit B2B completo especialmente diseñado para instalaciones rápidas.', 'https://images.unsplash.com/photo-1497436072909-60f360e1d4b0?auto=format&fit=crop&w=800&q=80', 'kits-solares', 'autoconsumo-red', '{"potencia_total":"6.5kW","tiempo_instalacion":"8h","incluye_estructura":"Sí"}'),
+('Kit B2B Instalador grid Mod 8', 'grid', 7, 5700, 70, 'Kit B2B completo especialmente diseñado para instalaciones rápidas.', 'https://images.unsplash.com/photo-1559302504-64aae6ca6b6f?auto=format&fit=crop&w=800&q=80', 'kits-solares', 'autoconsumo-red', '{"potencia_total":"7kW","tiempo_instalacion":"8h","incluye_estructura":"Sí"}'),
+('Kit B2B Instalador hybrid Mod 9', 'hybrid', 7.5, 6100, 75, 'Kit B2B completo especialmente diseñado para instalaciones rápidas.', 'https://images.unsplash.com/photo-1584283592683-176f1c4df762?auto=format&fit=crop&w=800&q=80', 'kits-solares', 'autoconsumo-red', '{"potencia_total":"7.5kW","tiempo_instalacion":"8h","incluye_estructura":"Sí"}'),
+('Kit B2B Instalador hybrid Mod 10', 'hybrid', 8, 6500, 80, 'Kit B2B completo especialmente diseñado para instalaciones rápidas.', 'https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=800&q=80', 'kits-solares', 'autoconsumo-red', '{"potencia_total":"8kW","tiempo_instalacion":"8h","incluye_estructura":"Sí"}'),
+('Kit B2B Instalador hybrid Mod 11', 'hybrid', 8.5, 6900, 85, 'Kit B2B completo especialmente diseñado para instalaciones rápidas.', 'https://images.unsplash.com/photo-1624397640148-949b1732bb0a?auto=format&fit=crop&w=800&q=80', 'kits-solares', 'autoconsumo-red', '{"potencia_total":"8.5kW","tiempo_instalacion":"8h","incluye_estructura":"Sí"}'),
+('Kit B2B Instalador hybrid Mod 12', 'hybrid', 9, 7300, 90, 'Kit B2B completo especialmente diseñado para instalaciones rápidas.', 'https://images.unsplash.com/photo-1548324546-f8f411db18b1?auto=format&fit=crop&w=800&q=80', 'kits-solares', 'autoconsumo-red', '{"potencia_total":"9kW","tiempo_instalacion":"8h","incluye_estructura":"Sí"}');
 
--- 5. LEADS - ~20 Items
-new_leads AS (
-    INSERT INTO "public"."leads" (email, address, monthly_bill, roof_type) VALUES
-    ('diego@example.com', 'Calle Mayor 123, Madrid', 120.50, 'flat'),
-    ('maria.garcia@gmail.com', 'Av. Diagonal 45, Barcelona', 85.00, 'tiled'),
-    ('john.doe@techcorp.com', '10 Downing St, London', 350.00, 'slate'),
-    ('sarah.connor@sky.net', 'Desert Rd 99, California', 450.00, 'metal'),
-    ('customer1@demo.com', 'Urbanizacion Sol 4, Sevilla', 95.00, 'tiled'),
-    ('solar.fan@energy.org', 'Eco Village 12, Valencia', 110.00, 'flat'),
-    ('business@shop.com', 'Poligono Ind. Norte, Bilbao', 900.00, 'metal'),
-    ('farm.owner@field.es', 'Carretera N-340 km 20, Murcia', 150.00, 'other'),
-    ('penthouse@luxury.com', 'Gran Via 1, Madrid', 200.00, 'flat'),
-    ('beach.house@costa.com', 'Paseo Maritimo 55, Malaga', 75.00, 'tiled'),
-    ('mountain.refuge@peaks.com', 'Sendero Alto 3, Huesca', 40.00, 'slate'),
-    ('test.user.1@gmail.com', 'Calle Falsa 123, Springfield', 100.00, 'shingle'),
-    ('innovator@startup.io', 'Tech Park Hub, Barcelona', 250.00, 'glass'),
-    ('family.smith@yahoo.com', 'Suburban Lane 8, Liverpool', 130.00, 'tiled'),
-    ('green.energy@future.com', 'Solar Ave 2050, Berlin', 80.00, 'solar_tile'),
-    ('hotel.manager@resort.com', 'Playa Blanca 5 stars, Lanzarote', 2500.00, 'flat'),
-    ('school.principal@edu.org', 'Carrera 7, Bogota', 600.00, 'concrete'),
-    ('chef.restaurant@food.com', 'Rue de Paris 15, Lyon', 450.00, 'tile'),
-    ('logistics@warehouse.com', 'Dock 4, Hamburg', 1200.00, 'metal'),
-    ('artist@studio.com', 'Loft 42, New York', 180.00, 'flat')
-    RETURNING id, email
-)
-
--- 6. SIMULATIONS - Linking Leads to Recommended Kits
-INSERT INTO "public"."simulations" (lead_id, recommended_kit_id, estimated_savings_year_1)
-SELECT 
-    l.id as lead_id,
-    k.id as recommended_kit_id,
-    (k.price * 0.15 + random() * 100)::numeric(10,2) as estimated_savings_year_1
-FROM new_leads l
-CROSS JOIN LATERAL (
-    SELECT id, price FROM new_kits 
-    ORDER BY random() 
-    LIMIT 1
-) k;
+-- Set realistic stock boundaries based on status
+UPDATE "public"."products" SET stock = 50 WHERE stock_status = 'in_stock';
+UPDATE "public"."products" SET stock = 0 WHERE stock_status = 'out_of_stock';
+UPDATE "public"."kits" SET stock = 15;
 
 COMMIT;

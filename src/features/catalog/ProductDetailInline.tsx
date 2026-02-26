@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { ShoppingCart, Check, Zap, Battery, Home, Info, X } from 'lucide-react';
+import { ShoppingCart, Check, Zap, Battery, Home, Info, X, ExternalLink } from 'lucide-react';
 import type { Kit } from '../../types';
 import { Button } from '../../components/common/Button';
 import { useTranslation } from 'react-i18next';
@@ -30,16 +30,29 @@ export function ProductDetailInline({ product, onClose, onAddToCart }: ProductDe
             className="w-full overflow-hidden col-span-1 md:col-span-2 lg:col-span-3"
         >
             <div className="bg-zinc-900/80 border border-white/10 rounded-3xl p-6 md:p-8 flex flex-col md:flex-row gap-8 relative mt-4 mb-8 backdrop-blur-xl">
-                {/* Close Button */}
-                <button
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        onClose();
-                    }}
-                    className="absolute top-4 right-4 p-2 bg-white/5 hover:bg-white/10 rounded-full transition-colors z-20"
-                >
-                    <X className="w-5 h-5 text-slate-400" />
-                </button>
+                {/* Top Right Actions */}
+                <div className="absolute top-4 right-4 flex items-center gap-2 z-20">
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            window.open(`/product/${product.id}`, '_blank');
+                        }}
+                        className="p-2 bg-white/5 hover:bg-white/10 rounded-full transition-colors"
+                        title="Abrir en pestaña nueva"
+                    >
+                        <ExternalLink className="w-5 h-5 text-slate-400" />
+                    </button>
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onClose();
+                        }}
+                        className="p-2 bg-white/5 hover:bg-white/10 rounded-full transition-colors"
+                        title="Cerrar detalle"
+                    >
+                        <X className="w-5 h-5 text-slate-400" />
+                    </button>
+                </div>
 
                 {/* Left Column: Image & Quick Specs */}
                 <div className="w-full md:w-1/3 space-y-6">

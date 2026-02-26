@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { KitCard } from './KitCard';
 import { BentoGrid } from '../../components/layout/BentoGrid';
 import type { Kit } from '../../types';
@@ -17,14 +18,28 @@ export function CatalogSection() {
     const [visibleCount, setVisibleCount] = useState(3); // Start with 3 items
     const [isCatalogueOpen, setIsCatalogueOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<Kit | null>(null);
+    const [catalogExpandedProductId, setCatalogExpandedProductId] = useState<string | null>(null);
 
     const { t } = useTranslation();
     const { addItem } = useCart();
 
+
+    const [searchParams, setSearchParams] = useSearchParams();
+    const categorySlug = searchParams.get('category');
+    const triggerTimestamp = searchParams.get('_t');
+
+    // Auto open catalogue when URL contains category
+    useEffect(() => {
+        if (categorySlug) {
+            setIsCatalogueOpen(true);
+        }
+    }, [categorySlug, triggerTimestamp]);
+
     useEffect(() => {
         async function loadKits() {
             try {
-                const data = await CatalogService.getKits();
+                // Fetch ALL catalog items so the modal has everything to search/filter locally
+                const data = await CatalogService.getAllCatalog();
                 setKits(data);
             } finally {
                 setIsLoading(false);
@@ -32,6 +47,24 @@ export function CatalogSection() {
         }
         loadKits();
     }, []);
+
+    const handleCloseCatalogue = () => {
+        setIsCatalogueOpen(false);
+        setCatalogExpandedProductId(null);
+        // Clear params if we close modal, keeping us on homepage without filters
+        if (categorySlug || triggerTimestamp) {
+            searchParams.delete('category');
+            searchParams.delete('sub');
+            searchParams.delete('_t');
+            setSearchParams(searchParams);
+        }
+    };
+
+    const handleExpandProduct = (product: Kit) => {
+        setSelectedProduct(null);
+        setCatalogExpandedProductId(product.id);
+        setIsCatalogueOpen(true);
+    };
 
     // ... (skipping duplicate useEffect) ...
 
@@ -44,7 +77,9 @@ export function CatalogSection() {
                             {t('catalog.badge')}
                         </Badge>
                     </div>
-                    <h2 className="text-4xl font-bold mb-3 text-white">{t('catalog.title')}</h2>
+                    <h2 className="text-4xl font-bold mb-3 text-white">
+                        {t('catalog.title')}
+                    </h2>
                     <p className="text-slate-400 max-w-xl text-lg">
                         {t('catalog.description')}
                     </p>
@@ -108,9 +143,10 @@ export function CatalogSection() {
 
             <CatalogueModal
                 isOpen={isCatalogueOpen}
-                onClose={() => setIsCatalogueOpen(false)}
+                onClose={handleCloseCatalogue}
                 kits={kits}
                 onViewDetails={setSelectedProduct}
+                initialExpandedId={catalogExpandedProductId}
             />
 
             <ProductDetailModal
@@ -118,6 +154,7 @@ export function CatalogSection() {
                 onClose={() => setSelectedProduct(null)}
                 product={selectedProduct}
                 onAddToCart={addItem}
+                onExpand={handleExpandProduct}
             />
         </section>
     );

@@ -1,4 +1,25 @@
 {
+    "search": {
+        "triggerLabel": "Buscar...",
+        "triggerTitle": "Buscar productos, categorías y más (⌘K)",
+        "placeholder": "Buscar productos, categorías, herramientas...",
+        "loading": "Cargando catálogo...",
+        "emptyTitle": "¿Qué estás buscando?",
+        "emptyHint": "Busca productos, categorías o secciones del sitio",
+        "noResults": "Sin resultados para esta búsqueda",
+        "noResultsHint": "Prueba con otros términos o explora las categorías",
+        "groups": {
+            "products": "Productos",
+            "categories": "Categorías",
+            "pages": "Páginas"
+        },
+        "hints": {
+            "navigate": "navegar",
+            "select": "seleccionar",
+            "close": "cerrar",
+            "resultsCount": "resultados"
+        }
+    },
     "common": {
         "loading": "Cargando...",
         "addToCart": "Añadir al carrito",
@@ -20,16 +41,24 @@
         "home": "Inicio",
         "products": "Productos",
         "map3d": "Mapa 3D",
-        "calculator": "Simulador",
-        "installers": "Instaladores"
+        "calculator": "Simulador"
     },
     "hero": {
-        "title": "Toma el control de tu <1>energía</1>",
-        "subtitle": "Calcula tu ahorro en tiempo real y descubre el kit solar perfecto para tu hogar. Sin complicaciones técnicas.",
+        "badge": "Plataforma B2B para Instaladores Profesionales",
+        "title": "Tu proveedor solar de <1>confianza</1>",
+        "subtitle": "Accede a precios mayoristas, stock en tiempo real y soporte técnico dedicado. La plataforma que potencia tu negocio de instalación solar.",
         "cta": {
-            "simulate": "Simular Ahorro",
-            "video": "Ver Video Demo"
-        }
+            "simulate": "Explorar Catálogo",
+            "video": "Solicitar Acceso B2B"
+        },
+        "stats": {
+            "installers": "Instaladores Activos",
+            "dispatched": "MW Despachados",
+            "delivery": "Entrega Express",
+            "deliveryValue": "24-48h",
+            "support": "Soporte Técnico"
+        },
+        "trustedBy": "Marcas que distribuimos"
     },
     "calculator": {
         "title": "Simulador de Precisión",
@@ -69,18 +98,9 @@
         "months": "/mes",
         "years": "Años"
     },
-    "installers": {
-        "badge": "Red Certificada",
-        "title": "Instaladores <1>Verificados</1>",
-        "desc": "No te preocupes por la instalación. Trabajamos con los mejores expertos de tu zona, auditados por nosotros.",
-        "count": "+500 Instaladores",
-        "rating": "Valoración Media",
-        "viewProfile": "Ver Perfil",
-        "viewAll": "Ver todos los instaladores"
-    },
     "trust": {
-        "title": "Confianza que genera <1>Energía</1>",
-        "subtitle": "Únete a más de 2.000 hogares que ya han dado el paso hacia la independencia energética con SolarGen.",
+        "title": "La plataforma en la que confían los <1>profesionales</1>",
+        "subtitle": "Más de 2.000 instaladores profesionales ya gestionan su suministro solar a través de SolarGen.",
         "reviews": {
             "basedOn": "basado en +500 reseñas verificadas",
             "stars": "Excelencia"
@@ -102,16 +122,16 @@
         "featuredKits": "Kits Destacados",
         "whyChooseUs": "Por qué elegirnos",
         "guarantee": {
-            "title": "Garantía de 25 años",
-            "desc": "En todos los paneles solares aseguran tu inversión."
+            "title": "Precios Mayoristas",
+            "desc": "Accede a tarifas exclusivas para profesionales con descuentos por volumen en todo el catálogo."
         },
         "installation": {
-            "title": "Instalación Simplificada",
-            "desc": "Diseñado para que puedas instalarlo tú mismo o con ayuda básica."
+            "title": "Logística Express 24-48h",
+            "desc": "Envíos directos desde almacén central con seguimiento en tiempo real para tus proyectos."
         },
         "support": {
-            "title": "Soporte Técnico 24/7",
-            "desc": "Expertos ingenieros a tu disposición en cualquier momento."
+            "title": "Soporte Técnico Dedicado",
+            "desc": "Ingeniero asignado a tu cuenta para dimensionamiento de proyectos y resolución técnica."
         }
     },
     "catalog": {

@@ -1,8 +1,8 @@
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Star, Quote, User } from 'lucide-react';
+import { X, Star, Quote, User, Maximize2, Minimize2 } from 'lucide-react';
 
 export interface Testimonial {
     id: number;
@@ -20,6 +20,8 @@ interface TestimonialsModalProps {
 }
 
 export function TestimonialsModal({ isOpen, onClose, testimonials }: TestimonialsModalProps) {
+    const [isMaximized, setIsMaximized] = useState(false);
+
     useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = 'hidden';
@@ -54,7 +56,8 @@ export function TestimonialsModal({ isOpen, onClose, testimonials }: Testimonial
                                 animate={{ opacity: 1, scale: 1, y: 0 }}
                                 exit={{ opacity: 0, scale: 0.95, y: 20 }}
                                 onClick={(e) => e.stopPropagation()}
-                                className="relative w-full max-w-6xl bg-zinc-950 border border-white/10 shadow-2xl rounded-3xl overflow-hidden flex flex-col max-h-[90vh]"
+                                className={`relative w-full bg-zinc-950 border border-white/10 shadow-2xl overflow-hidden flex flex-col transition-all duration-300 ${isMaximized ? 'max-w-[100vw] h-screen rounded-none' : 'max-w-6xl max-h-[90vh] rounded-3xl'
+                                    }`}
                             >
                                 <div className="p-6 border-b border-white/10 bg-black/20 backdrop-blur-xl flex flex-col gap-4 z-20 shrink-0">
                                     <div className="flex items-center justify-between">
@@ -62,12 +65,21 @@ export function TestimonialsModal({ isOpen, onClose, testimonials }: Testimonial
                                             <h2 className="text-2xl font-bold text-white mb-1">Opiniones de Clientes</h2>
                                             <p className="text-slate-400 text-sm">Más de 500 reseñas verificadas de propietarios satisfechos</p>
                                         </div>
-                                        <button
-                                            onClick={onClose}
-                                            className="p-2 rounded-full hover:bg-white/10 transition-colors text-slate-400 hover:text-white"
-                                        >
-                                            <X className="w-6 h-6" />
-                                        </button>
+                                        <div className="flex items-center gap-2">
+                                            <button
+                                                onClick={() => setIsMaximized(!isMaximized)}
+                                                className="p-2 rounded-full hover:bg-white/10 transition-colors text-slate-400 hover:text-white"
+                                                title={isMaximized ? "Restaurar" : "Maximizar"}
+                                            >
+                                                {isMaximized ? <Minimize2 className="w-6 h-6" /> : <Maximize2 className="w-6 h-6" />}
+                                            </button>
+                                            <button
+                                                onClick={onClose}
+                                                className="p-2 rounded-full hover:bg-white/10 transition-colors text-slate-400 hover:text-white"
+                                            >
+                                                <X className="w-6 h-6" />
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
 

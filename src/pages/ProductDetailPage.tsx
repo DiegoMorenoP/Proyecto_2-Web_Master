@@ -17,14 +17,28 @@ export function ProductDetailPage() {
         async function fetchKit() {
             if (!id) return;
 
-            const { data, error } = await supabase
+            // Try 'kits' table first
+            const { data: kitsData, error: kitsError } = await supabase
                 .from('kits')
                 .select('*')
                 .eq('id', id)
                 .single();
 
-            if (!error && data) {
-                setKit(data as Kit);
+            if (!kitsError && kitsData) {
+                setKit(kitsData as Kit);
+                setLoading(false);
+                return;
+            }
+
+            // Fallback: try 'products' table
+            const { data: prodsData, error: prodsError } = await supabase
+                .from('products')
+                .select('*')
+                .eq('id', id)
+                .single();
+
+            if (!prodsError && prodsData) {
+                setKit(prodsData as Kit);
             }
             setLoading(false);
         }

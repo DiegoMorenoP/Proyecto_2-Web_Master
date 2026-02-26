@@ -1,4 +1,25 @@
 {
+    "search": {
+        "triggerLabel": "Search...",
+        "triggerTitle": "Search products, categories and more (⌘K)",
+        "placeholder": "Search products, categories, tools...",
+        "loading": "Loading catalog...",
+        "emptyTitle": "What are you looking for?",
+        "emptyHint": "Search products, categories or site sections",
+        "noResults": "No results for this search",
+        "noResultsHint": "Try other terms or explore the categories",
+        "groups": {
+            "products": "Products",
+            "categories": "Categories",
+            "pages": "Pages"
+        },
+        "hints": {
+            "navigate": "navigate",
+            "select": "select",
+            "close": "close",
+            "resultsCount": "results"
+        }
+    },
     "common": {
         "loading": "Loading...",
         "addToCart": "Add to Cart",
@@ -10,7 +31,7 @@
         "language": "Language",
         "power": "Power",
         "savings": "Savings",
-        "outOfStock": "Agotado",
+        "outOfStock": "Out of Stock",
         "login": "Login",
         "logout": "Logout",
         "showMore": "Show more options"
@@ -19,16 +40,24 @@
         "home": "Home",
         "products": "Products",
         "map3d": "Map",
-        "calculator": "Simulator",
-        "installers": "Installers"
+        "calculator": "Simulator"
     },
     "hero": {
-        "title": "Take control of your <1>energy</1>",
-        "subtitle": "Calculate your savings in real-time and discover the perfect solar kit for your home. No technical complications.",
+        "badge": "B2B Platform for Professional Installers",
+        "title": "Your trusted solar <1>supplier</1>",
+        "subtitle": "Access wholesale pricing, real-time stock and dedicated technical support. The platform that powers your solar installation business.",
         "cta": {
-            "simulate": "Simulate Savings",
-            "video": "Watch Demo Video"
-        }
+            "simulate": "Explore Catalog",
+            "video": "Request B2B Access"
+        },
+        "stats": {
+            "installers": "Active Installers",
+            "dispatched": "MW Dispatched",
+            "delivery": "Express Delivery",
+            "deliveryValue": "24-48h",
+            "support": "Technical Support"
+        },
+        "trustedBy": "Brands we distribute"
     },
     "calculator": {
         "title": "Precision Simulator",
@@ -68,18 +97,9 @@
         "months": "/mo",
         "years": "Years"
     },
-    "installers": {
-        "badge": "Certified Network",
-        "title": "Verified <1>Installers</1>",
-        "desc": "Don't worry about installation. We work with the best experts in your area, audited by us.",
-        "count": "+500 Installers",
-        "rating": "Average Rating",
-        "viewProfile": "View Profile",
-        "viewAll": "View all installers"
-    },
     "trust": {
-        "title": "Trust that generates <1>Energy</1>",
-        "subtitle": "Join more than 2,000 households that have already taken the step towards energy independence with SolarGen.",
+        "title": "The platform trusted by <1>professionals</1>",
+        "subtitle": "Over 2,000 professional installers already manage their solar supply through SolarGen.",
         "reviews": {
             "basedOn": "based on +500 verified reviews",
             "stars": "Excellence"
@@ -99,16 +119,16 @@
         "featuredKits": "Featured Kits",
         "whyChooseUs": "Why Choose Us",
         "guarantee": {
-            "title": "25-Year Warranty",
-            "desc": "On all solar panels to secure your investment."
+            "title": "Wholesale Pricing",
+            "desc": "Access exclusive rates for professionals with volume discounts across the entire catalog."
         },
         "installation": {
-            "title": "Simplified Installation",
-            "desc": "Designed so you can install it yourself or with basic help."
+            "title": "Express Logistics 24-48h",
+            "desc": "Direct shipments from central warehouse with real-time tracking for your projects."
         },
         "support": {
-            "title": "24/7 Technical Support",
-            "desc": "Expert engineers at your disposal at any time."
+            "title": "Dedicated Technical Support",
+            "desc": "Assigned engineer for your account for project sizing and technical resolution."
         }
     },
     "catalog": {
