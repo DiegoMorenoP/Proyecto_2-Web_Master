@@ -136,7 +136,7 @@ export function ProductDetailPage() {
 
                         <div className="relative z-10">
                             <div className="flex flex-wrap items-end gap-3 mb-2">
-                                <span className="text-5xl md:text-6xl font-bold font-mono text-foreground tracking-tighter">{Math.round(kit.monthly_finance_cost)}€</span>
+                                <span className="text-5xl md:text-6xl font-bold font-mono text-foreground tracking-tighter">{Math.round(kit.monthly_finance_cost || 0)}€</span>
                                 <span className="text-xl text-muted-foreground mb-2">/ mes</span>
                             </div>
                             <div className="text-sm text-primary mb-8 font-medium flex items-center gap-2">

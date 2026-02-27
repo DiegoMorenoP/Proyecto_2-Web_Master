@@ -124,7 +124,7 @@ export function KitCard({ kit, onViewDetails, compact = false }: KitCardProps) {
                             </div>
                             {!compact && (
                                 <span className="text-sm text-slate-400 font-medium">
-                                    or {formatCurrency(kit.monthly_finance_cost)}/mo
+                                    or {formatCurrency(kit.monthly_finance_cost || 0)}/mo
                                 </span>
                             )}
                         </div>
