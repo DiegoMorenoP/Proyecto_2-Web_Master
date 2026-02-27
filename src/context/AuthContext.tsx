@@ -7,6 +7,9 @@ interface Profile {
     role: 'user' | 'admin' | 'moderator';
     full_name: string | null;
     avatar_url: string | null;
+    username: string | null;
+    website: string | null;
+    company_id: string | null;
 }
 
 interface AuthContextType {

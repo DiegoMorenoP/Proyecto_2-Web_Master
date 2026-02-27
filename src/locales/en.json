@@ -132,14 +132,14 @@
         }
     },
     "catalog": {
-        "badge": "CATALOG 2024",
-        "title": "Featured Kits",
-        "description": "Pre-configured photovoltaic systems for maximum efficiency and immediate savings.",
+        "badge": "PRO CATALOG 2026",
+        "title": "Professional Packs",
+        "description": "Turnkey pre-configured systems for installers. Wholesale pricing, express logistics and technical support included.",
         "viewAll": "View all products",
         "showMore": "Show More",
         "modal": {
-            "title": "Product Catalog",
-            "subtitle": "Explore our complete range of solar kits",
+            "title": "Professional Catalog",
+            "subtitle": "Complete packs ready to install with guaranteed margin",
             "searchPlaceholder": "Search by name, power...",
             "noResults": "No products found with these filters.",
             "clearFilters": "Clear filters"

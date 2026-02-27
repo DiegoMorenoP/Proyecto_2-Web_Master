@@ -131,8 +131,9 @@ export function MegaMenu() {
                                     <button
                                         key={category.title}
                                         onMouseEnter={() => setActiveTab(idx)}
+                                        onClick={() => handleCategoryClick(category.href)}
                                         className={cn(
-                                            "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-left w-full",
+                                            "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors text-left w-full cursor-pointer",
                                             activeTab === idx
                                                 ? "bg-primary/20 text-primary"
                                                 : "text-slate-300 hover:bg-white/5 hover:text-white"

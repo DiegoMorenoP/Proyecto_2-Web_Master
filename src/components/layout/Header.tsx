@@ -1,4 +1,4 @@
-import { LucideZap, ShoppingCart, Menu, X, LogOut, User, Maximize2, Trash2, Search, Command } from 'lucide-react';
+import { LucideZap, ShoppingCart, Menu, X, LogOut, User, Maximize2, Trash2, Search, Command, ChevronDown, Package, Truck, RotateCcw, LogIn } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '../common/Button';
 import { useCart } from '../../context/CartContext';
@@ -10,15 +10,19 @@ import { LoginModal } from '../auth/LoginModal';
 import { MegaMenu } from './MegaMenu';
 import { MobileMenuNav } from './MobileMenuNav';
 import { GlobalSearchModal } from '../common/GlobalSearchModal';
+import { ContactMenu } from './ContactMenu';
+
 export function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [isCartHover, setIsCartHover] = useState(false);
     const cartHoverTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const [isAccountHover, setIsAccountHover] = useState(false);
+    const accountHoverTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
     const { toggleCart, itemCount, items, subtotal, removeItem } = useCart();
     const { t } = useTranslation();
-    const { user, signOut, profile } = useAuth();
+    const { user, signOut } = useAuth();
 
     // ⌘K / Ctrl+K keyboard shortcut
     useEffect(() => {
@@ -39,6 +43,15 @@ export function Header() {
 
     const handleCartMouseLeave = () => {
         cartHoverTimeout.current = setTimeout(() => setIsCartHover(false), 200);
+    };
+
+    const handleAccountMouseEnter = () => {
+        if (accountHoverTimeout.current) clearTimeout(accountHoverTimeout.current);
+        setIsAccountHover(true);
+    };
+
+    const handleAccountMouseLeave = () => {
+        accountHoverTimeout.current = setTimeout(() => setIsAccountHover(false), 200);
     };
 
     return (
@@ -112,15 +125,6 @@ export function Header() {
                                         <div className="p-4 space-y-3 max-h-60 overflow-y-auto">
                                             {items.slice(0, 3).map(item => (
                                                 <div key={item.id} className="flex gap-3 items-center group/item">
-                                                    <div className="w-12 h-12 bg-slate-800 rounded-lg overflow-hidden flex-shrink-0 border border-white/5">
-                                                        {item.image_url ? (
-                                                            <img src={item.image_url} alt={item.name} className="w-full h-full object-cover" />
-                                                        ) : (
-                                                            <div className="w-full h-full flex items-center justify-center">
-                                                                <ShoppingCart className="w-4 h-4 text-slate-600" />
-                                                            </div>
-                                                        )}
-                                                    </div>
                                                     <div className="flex-1 min-w-0">
                                                         <p className="text-sm font-medium text-white truncate">{item.name}</p>
                                                         <p className="text-xs text-slate-400">
@@ -162,32 +166,89 @@ export function Header() {
                         )}
                     </div>
 
-                    {/* Login / Profile - Always Visible */}
-                    {user ? (
-                        <div className="flex items-center gap-2 pl-2 border-l border-white/10">
-                            <Link to="/profile" className="flex items-center gap-2 text-sm font-medium text-slate-300 hover:text-white">
-                                {profile?.avatar_url ? (
-                                    <img src={profile.avatar_url} alt="Profile" className="h-8 w-8 rounded-full bg-white/10 object-cover" />
-                                ) : (
-                                    <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center">
-                                        <User className="h-4 w-4 text-primary" />
-                                    </div>
-                                )}
-                            </Link>
-                            <button onClick={() => signOut()} className="hidden md:block text-slate-400 hover:text-white transition-colors" title="Cerrar sesión">
-                                <LogOut className="h-5 w-5" />
-                            </button>
-                        </div>
-                    ) : (
+                    {/* Contact Menu Dropdown */}
+                    <ContactMenu />
+
+                    {/* Account Dropdown */}
+                    <div
+                        className="relative hidden md:block"
+                        onMouseEnter={handleAccountMouseEnter}
+                        onMouseLeave={handleAccountMouseLeave}
+                    >
                         <button
-                            onClick={() => setIsLoginModalOpen(true)}
-                            className="h-10 w-10 flex items-center justify-center rounded-xl bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
-                            title={t('common.login')}
-                            aria-label={t('common.login')}
+                            className="flex items-center gap-2 h-10 px-3 rounded-xl hover:bg-white/5 transition-colors text-slate-300 hover:text-white"
                         >
-                            <User className="h-5 w-5" />
+                            <span className="text-sm font-medium">Mi cuenta</span>
+                            <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isAccountHover ? 'rotate-180' : ''}`} />
                         </button>
-                    )}
+
+                        {/* Hover Popover */}
+                        {isAccountHover && (
+                            <div className="absolute right-0 top-full mt-2 w-60 bg-secondary border border-white/10 rounded-xl shadow-2xl shadow-black/40 overflow-hidden z-[60] animate-in fade-in slide-in-from-top-2 duration-200">
+                                {/* Flecha */}
+                                <div className="absolute -top-1.5 right-6 w-3 h-3 bg-secondary border-l border-t border-white/10 rotate-45" />
+                                {/* Invisible bridge */}
+                                <div className="absolute -top-3 left-0 w-full h-3" />
+
+                                <div className="p-2 flex flex-col gap-1 relative z-10 text-left">
+                                    <Link to="/orders" onClick={() => setIsAccountHover(false)} className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
+                                        <Package className="h-4 w-4 opacity-70" />
+                                        Mis Pedidos
+                                    </Link>
+                                    <Link to="/shipping" onClick={() => setIsAccountHover(false)} className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
+                                        <Truck className="h-4 w-4 opacity-70" />
+                                        Envíos
+                                    </Link>
+                                    <Link to="/returns" onClick={() => setIsAccountHover(false)} className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-bold text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
+                                        <RotateCcw className="h-4 w-4 opacity-70" />
+                                        Devoluciones
+                                    </Link>
+
+                                    <div className="border-t border-white/10 my-1"></div>
+
+                                    {user ? (
+                                        <>
+                                            <Link to="/profile" onClick={() => setIsAccountHover(false)} className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-primary/20 hover:text-primary transition-colors">
+                                                <User className="h-4 w-4 opacity-70" />
+                                                Mi Perfil
+                                            </Link>
+                                            <button
+                                                onClick={() => { signOut(); setIsAccountHover(false); }}
+                                                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors"
+                                            >
+                                                <LogOut className="h-4 w-4 opacity-70" />
+                                                Cerrar sesión
+                                            </button>
+                                        </>
+                                    ) : (
+                                        <button
+                                            onClick={() => { setIsLoginModalOpen(true); setIsAccountHover(false); }}
+                                            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-primary/20 hover:text-primary transition-colors"
+                                        >
+                                            <LogIn className="h-4 w-4 opacity-70" />
+                                            Iniciar sesión
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Mobile Login Placeholder */}
+                    <div className="md:hidden">
+                        {user ? (
+                            <Link to="/profile" className="flex items-center justify-center h-10 w-10 border border-white/10 rounded-xl bg-white/5 text-slate-300">
+                                <User className="h-5 w-5" />
+                            </Link>
+                        ) : (
+                            <button
+                                onClick={() => setIsLoginModalOpen(true)}
+                                className="h-10 w-10 flex items-center justify-center rounded-xl bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+                            >
+                                <User className="h-5 w-5" />
+                            </button>
+                        )}
+                    </div>
 
                     {/* Mobile Menu Toggle */}
                     <button

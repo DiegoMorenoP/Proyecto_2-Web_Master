@@ -135,14 +135,14 @@
         }
     },
     "catalog": {
-        "badge": "CATÁLOGO 2024",
-        "title": "Kits Destacados",
-        "description": "Sistemas fotovoltaicos pre-configurados para máxima eficiencia y ahorro inmediato.",
+        "badge": "CATÁLOGO PRO 2026",
+        "title": "Packs Profesionales",
+        "description": "Sistemas llave en mano pre-configurados para instaladores. Precio mayorista, logística express y soporte técnico incluido.",
         "viewAll": "Ver todos los productos",
         "showMore": "Ver más",
         "modal": {
-            "title": "Catálogo de Productos",
-            "subtitle": "Explora nuestra gama completa de kits solares",
+            "title": "Catálogo Profesional",
+            "subtitle": "Packs completos listos para instalar con margen garantizado",
             "searchPlaceholder": "Buscar por nombre, potencia...",
             "noResults": "No se encontraron productos con estos filtros.",
             "clearFilters": "Limpiar filtros"

@@ -18,6 +18,15 @@ import { LeadFormModal } from './components/common/LeadFormModal';
 import { HeroSection } from './components/layout/HeroSection';
 import { TestimonialsSection } from './components/trust/TestimonialsSection';
 import { CatalogSection } from './features/catalog/CatalogSection';
+import { OrdersPage } from './features/account/pages/OrdersPage';
+import { ShippingPage } from './features/account/pages/ShippingPage';
+import { ReturnsPage } from './features/account/pages/ReturnsPage';
+import { ProfilePage } from './features/account/pages/ProfilePage';
+import { PresupuestoPage } from './pages/contacto/PresupuestoPage';
+import { GuiaPage } from './pages/contacto/GuiaPage';
+import { FormularioPage } from './pages/contacto/FormularioPage';
+import { LlamarPage } from './pages/contacto/LlamarPage';
+import { FaqPage } from './pages/contacto/FaqPage';
 
 function HomePage() {
   const [isLeadFormOpen, setIsLeadFormOpen] = useState(false);
@@ -136,10 +145,18 @@ function App() {
               </Layout>
             } />
 
+            {/* Contacto Routes */}
+            <Route path="/contacto/presupuesto" element={<Layout><PresupuestoPage /></Layout>} />
+            <Route path="/contacto/guia" element={<Layout><GuiaPage /></Layout>} />
+            <Route path="/contacto/formulario" element={<Layout><FormularioPage /></Layout>} />
+            <Route path="/contacto/llamar" element={<Layout><LlamarPage /></Layout>} />
+            <Route path="/contacto/faq" element={<Layout><FaqPage /></Layout>} />
+
             {/* Protected Routes Example */}
-            <Route element={<ProtectedRoute />}>
-              {/* Add protected routes here later, e.g. /profile, /orders */}
-            </Route>
+            <Route path="/orders" element={<OrdersPage />} />
+            <Route path="/shipping" element={<ShippingPage />} />
+            <Route path="/returns" element={<ReturnsPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
 
             {/* Admin Routes Example */}
             <Route element={<ProtectedRoute requireAdmin />}>

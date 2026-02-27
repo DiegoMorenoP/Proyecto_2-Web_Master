@@ -54,8 +54,8 @@ const StatCard = ({ icon, value, label, delay, accent }: StatCardProps) => (
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay }}
         className={`relative group flex items-center gap-4 px-5 py-4 rounded-2xl border transition-all duration-300 ${accent
-                ? 'bg-primary/10 border-primary/20 hover:border-primary/40 hover:bg-primary/15'
-                : 'bg-white/[0.03] border-white/[0.06] hover:border-white/15 hover:bg-white/[0.06]'
+            ? 'bg-primary/10 border-primary/20 hover:border-primary/40 hover:bg-primary/15'
+            : 'bg-white/[0.03] border-white/[0.06] hover:border-white/15 hover:bg-white/[0.06]'
             }`}
     >
         <div className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center ${accent ? 'bg-primary/20 text-primary' : 'bg-white/5 text-slate-400 group-hover:text-white'
@@ -81,7 +81,7 @@ export const HeroSection = ({ onScrollToSimulator }: { onScrollToSimulator: () =
     const mwCount = useAnimatedCounter(15, 1800, 1000);
 
     return (
-        <section className="relative min-h-[100vh] flex items-center overflow-hidden">
+        <section className="relative min-h-[100svh] flex items-start overflow-hidden">
             {/* ── Background Layers ── */}
             <div className="absolute inset-0 z-0">
                 {/* Primary gradient overlay */}
@@ -105,7 +105,7 @@ export const HeroSection = ({ onScrollToSimulator }: { onScrollToSimulator: () =
             </div>
 
             {/* ── Content ── */}
-            <div className="container relative z-20 px-6 mx-auto pt-28 pb-16 md:pt-32 md:pb-20">
+            <div className="container relative z-20 px-6 mx-auto pt-[88px] pb-12 md:pt-[96px] md:pb-16">
                 <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
 
                     {/* ── Left Column: Copy ── */}
@@ -263,7 +263,7 @@ export const HeroSection = ({ onScrollToSimulator }: { onScrollToSimulator: () =
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 1.2 }}
-                    className="mt-16 lg:mt-20 pt-8 border-t border-white/[0.04]"
+                    className="mt-10 lg:mt-14 pt-6 border-t border-white/[0.04]"
                 >
                     <p className="text-xs font-medium text-slate-600 uppercase tracking-[0.2em] text-center mb-6">
                         {t('hero.trustedBy')}
