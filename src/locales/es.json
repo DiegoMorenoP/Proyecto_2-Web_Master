@@ -80,6 +80,14 @@
         "roi": "Retorno Inversión",
         "bookStudy": "Reservar Estudio Gratuito",
         "autarky": "Autarquía",
+        "installerMargin": "Tu Margen Comercial",
+        "b2bCost": "Coste Materiales (B2B)",
+        "netProfit": "Beneficio Neto Proyectado",
+        "addToCartB2B": "Llevar al Carrito B2B",
+        "installerViewTitle": "Tus Números de Instalador",
+        "clientViewTitle": "Datos para tu Cliente",
+        "clientPrice": "PVP Recomendado Cliente",
+        "profitMargin": "Margen",
         "ai": {
             "title": "¿Es esta una buena inversión?",
             "desc": "Deja que nuestra IA analice tu perfil de consumo y te explique el retorno de inversión en lenguaje sencillo.",
@@ -136,8 +144,8 @@
     },
     "catalog": {
         "badge": "CATÁLOGO PRO 2026",
-        "title": "Packs Profesionales",
-        "description": "Sistemas llave en mano pre-configurados para instaladores. Precio mayorista, logística express y soporte técnico incluido.",
+        "title": "Equipamiento Solar Profesional",
+        "description": "Sistemas llave en mano de alto rendimiento para instaladores. Precio mayorista, logística express y soporte técnico experto incluido.",
         "viewAll": "Ver todos los productos",
         "showMore": "Ver más",
         "modal": {

@@ -75,7 +75,7 @@ const StatCard = ({ icon, value, label, delay, accent }: StatCardProps) => (
 );
 
 /* ─── Main Component ─── */
-export const HeroSection = ({ onScrollToSimulator }: { onScrollToSimulator: () => void }) => {
+export const HeroSection = ({ onScrollToCatalog }: { onScrollToCatalog: () => void }) => {
     const { t } = useTranslation();
     const installersCount = useAnimatedCounter(2000, 2200, 800);
     const mwCount = useAnimatedCounter(15, 1800, 1000);
@@ -158,7 +158,7 @@ export const HeroSection = ({ onScrollToSimulator }: { onScrollToSimulator: () =
                             <Button
                                 variant="primary"
                                 size="lg"
-                                onClick={onScrollToSimulator}
+                                onClick={onScrollToCatalog}
                                 className="text-base h-13 px-7 shadow-[0_0_30px_-8px_rgba(250,204,21,0.4)] hover:shadow-[0_0_50px_-8px_rgba(250,204,21,0.6)] transition-shadow duration-500"
                             >
                                 <Package className="w-5 h-5 mr-2" />

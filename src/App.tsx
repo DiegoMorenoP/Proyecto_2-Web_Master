@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { Layout } from './components/layout/Layout';
 import { SolarCalculator } from './components/SolarCalculator';
 import { ProductDetailPage } from './pages/ProductDetailPage';
@@ -31,18 +31,36 @@ import { FaqPage } from './pages/contacto/FaqPage';
 function HomePage() {
   const [isLeadFormOpen, setIsLeadFormOpen] = useState(false);
   const { t } = useTranslation();
+  const location = useLocation();
 
-  const scrollToSimulator = () => {
-    const element = document.getElementById('calculator');
+  useEffect(() => {
+    if (location.hash) {
+      const id = location.hash.replace('#', '');
+      const element = document.getElementById(id);
+      if (element) {
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+      }
+    }
+  }, [location]);
+
+  const scrollToCatalog = () => {
+    const element = document.getElementById('productos');
     element?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
     <Layout>
       {/* Hero Section */}
-      <HeroSection onScrollToSimulator={scrollToSimulator} />
+      <HeroSection onScrollToCatalog={scrollToCatalog} />
 
       <div className="container mx-auto px-4 py-12 space-y-12">
+        {/* Products Section */}
+        <div id="productos" className="scroll-mt-32">
+          <CatalogSection />
+        </div>
+
         {/* Calculator Section */}
         <div id="calculator" className="scroll-mt-24">
           <SolarCalculator onReserveClick={() => setIsLeadFormOpen(true)} />
@@ -50,11 +68,6 @@ function HomePage() {
 
         {/* Solar Mapping DSM Technology */}
         <SolarDsmSection />
-
-        {/* Products Section */}
-        <div id="productos" className="scroll-mt-32">
-          <CatalogSection />
-        </div>
 
         <LeadFormModal
           isOpen={isLeadFormOpen}

@@ -21,12 +21,13 @@ export function ContactMenu() {
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
-            <button
+            <Link
+                to="/contacto/formulario"
                 className="flex items-center gap-2 h-10 px-3 rounded-xl hover:bg-white/5 transition-colors text-slate-300 hover:text-white"
             >
                 <span className="text-sm font-medium">Contacto</span>
                 <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isHover ? 'rotate-180' : ''}`} />
-            </button>
+            </Link>
 
             {/* Hover Popover */}
             {isHover && (
