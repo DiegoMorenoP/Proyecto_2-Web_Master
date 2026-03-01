@@ -405,6 +405,7 @@ export const SolarCalculator = ({ onReserveClick }: { onReserveClick?: () => voi
                     <motion.button
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
+                        onClick={onReserveClick}
                         className="sm:px-8 py-4 bg-secondary text-foreground font-bold text-lg rounded-xl flex items-center justify-center gap-3 border border-border/50 hover:bg-secondary/80 transition-all"
                     >
                         Descargar Presupuesto Cliente
