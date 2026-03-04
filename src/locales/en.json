@@ -163,5 +163,54 @@
             "priceAsc": "Price: Low to High",
             "priceDesc": "Price: High to Low"
         }
+    },
+    "account": {
+        "title": "My Account",
+        "orders": "My Orders",
+        "shipping": "Shipping",
+        "returns": "Returns",
+        "profile": "My Profile",
+        "logout": "Logout",
+        "login": "Login"
+    },
+    "contact": {
+        "title": "Contact",
+        "quote": "Custom Quote",
+        "guide": "SolarGen Guide",
+        "form": "Contact Form",
+        "call": "Call SolarGen",
+        "faq": "FAQ (Frequently Asked Questions)"
+    },
+    "cart": {
+        "title": "Your Cart",
+        "emptyTitle": "Your cart is empty",
+        "emptyHint": "Your cart is empty.",
+        "moreProducts": "+{{count}} more product(s)",
+        "subtotal": "Subtotal",
+        "viewCart": "View Cart",
+        "clearAll": "Clear all",
+        "clear": "Clear",
+        "close": "Close cart",
+        "maximize": "Expand to full screen",
+        "returnToShop": "Return to shop",
+        "remove": "Remove",
+        "checkout": "Checkout",
+        "pageTitle": "Your Cart",
+        "pageDesc": "Review your products before finishing your purchase.",
+        "pageEmptyTitle": "Your cart is empty",
+        "pageEmptyDesc": "You don't have any solar system in your cart. Discover our range of products and start saving today.",
+        "exploreCatalog": "Explore Catalog",
+        "productsCount": "Products ({{count}})",
+        "clearCartPage": "Clear Cart",
+        "orderSummary": "Order Summary",
+        "shipping": "Shipping",
+        "free": "Free",
+        "taxes": "Taxes",
+        "calculatedAtCheckout": "Calculated at checkout",
+        "total": "Total",
+        "financingFrom": "Financing from ~{{amount}}€/mo",
+        "proceedToCheckout": "Proceed to Checkout",
+        "securePayment": "100% secure and encrypted payment",
+        "premiumSupport": "Premium technical support included"
     }
 }

@@ -1,10 +1,11 @@
 import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronDown, Calculator, BookOpen, Mail, Phone, HelpCircle } from 'lucide-react';
-
+import { useTranslation } from 'react-i18next';
 export function ContactMenu() {
     const [isHover, setIsHover] = useState(false);
     const hoverTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const { t } = useTranslation();
 
     const handleMouseEnter = () => {
         if (hoverTimeout.current) clearTimeout(hoverTimeout.current);
@@ -25,7 +26,7 @@ export function ContactMenu() {
                 to="/contacto/formulario"
                 className="flex items-center gap-2 h-10 px-3 rounded-xl hover:bg-white/5 transition-colors text-slate-300 hover:text-white"
             >
-                <span className="text-sm font-medium">Contacto</span>
+                <span className="text-sm font-medium">{t('contact.title')}</span>
                 <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isHover ? 'rotate-180' : ''}`} />
             </Link>
 
@@ -40,23 +41,23 @@ export function ContactMenu() {
                     <div className="p-2 flex flex-col gap-1 relative z-10 text-left">
                         <Link to="/contacto/presupuesto" onClick={() => setIsHover(false)} className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
                             <Calculator className="h-4 w-4 opacity-70" />
-                            Presupuesto personalizado
+                            {t('contact.quote')}
                         </Link>
                         <Link to="/contacto/guia" onClick={() => setIsHover(false)} className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
                             <BookOpen className="h-4 w-4 opacity-70" />
-                            Guía de CuencaSolar
+                            {t('contact.guide')}
                         </Link>
                         <Link to="/contacto/formulario" onClick={() => setIsHover(false)} className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
                             <Mail className="h-4 w-4 opacity-70" />
-                            Formulario de contacto
+                            {t('contact.form')}
                         </Link>
                         <Link to="/contacto/llamar" onClick={() => setIsHover(false)} className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
                             <Phone className="h-4 w-4 opacity-70" />
-                            Llamar a CuencaSolar
+                            {t('contact.call')}
                         </Link>
                         <Link to="/contacto/faq" onClick={() => setIsHover(false)} className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
                             <HelpCircle className="h-4 w-4 opacity-70" />
-                            FAQ (Preguntas Frecuentes)
+                            {t('contact.faq')}
                         </Link>
                     </div>
                 </div>

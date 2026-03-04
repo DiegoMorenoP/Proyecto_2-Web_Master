@@ -400,7 +400,7 @@ export const SolarCalculator = ({ onReserveClick }: { onReserveClick?: () => voi
                         className="flex-1 py-4 bg-primary text-primary-foreground font-bold text-lg rounded-xl flex items-center justify-center gap-3 shadow-xl shadow-primary/20 hover:shadow-primary/40 transition-all focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                     >
                         <ShoppingCart className="w-5 h-5" />
-                        Añadir Materiales al Carrito B2B
+                        {t('calculator.addToCartB2B')}
                     </motion.button>
                     <motion.button
                         whileHover={{ scale: 1.02 }}

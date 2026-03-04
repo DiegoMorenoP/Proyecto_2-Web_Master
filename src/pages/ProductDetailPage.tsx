@@ -6,12 +6,14 @@ import { Badge } from '../components/common/Badge';
 import { Loader2, ArrowLeft, Check, Shield, Zap, TrendingUp } from 'lucide-react';
 import type { Kit } from '../types';
 import { useCart } from '../context/CartContext';
+import { useTranslation } from 'react-i18next';
 
 export function ProductDetailPage() {
     const { id } = useParams<{ id: string }>();
     const [kit, setKit] = useState<Kit | null>(null);
     const [loading, setLoading] = useState(true);
     const { addItem } = useCart();
+    const { t } = useTranslation();
 
     useEffect(() => {
         async function fetchKit() {
@@ -160,7 +162,7 @@ export function ProductDetailPage() {
                                 onClick={() => kit && addItem(kit)}
                             >
                                 <Zap className="w-5 h-5 mr-2 fill-current" />
-                                Añadir al Carrito
+                                {t('common.addToCart')}
                             </Button>
                             <div className="text-center mt-4 text-xs text-muted-foreground flex items-center justify-center gap-1">
                                 <Shield className="w-3 h-3" />

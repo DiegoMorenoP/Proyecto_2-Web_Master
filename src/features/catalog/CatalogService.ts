@@ -51,7 +51,12 @@ export const CatalogService = {
         if (kitsRes.data) allItems = [...allItems, ...kitsRes.data];
         if (prodsRes.data) allItems = [...allItems, ...prodsRes.data];
 
-        return allItems.map(formatKitItem).sort((a, b) => (b.popularity_score || 0) - (a.popularity_score || 0));
+        if (allItems.length === 0) {
+            console.warn('No items found in database, falling back to MOCK_KITS');
+            return MOCK_KITS;
+        }
+
+        return allItems.map(formatKitItem).sort((a: any, b: any) => (b.popularity_score || 0) - (a.popularity_score || 0));
     },
 
     async getKits(categorySlug?: string, subcategorySlug?: string): Promise<Kit[]> {

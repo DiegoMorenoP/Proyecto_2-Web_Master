@@ -118,7 +118,7 @@ export function Header() {
                                 {items.length === 0 ? (
                                     <div className="p-6 text-center text-sm text-slate-400">
                                         <ShoppingCart className="w-8 h-8 mx-auto mb-2 opacity-30" />
-                                        Tu cesta está vacía
+                                        {t('cart.emptyTitle')}
                                     </div>
                                 ) : (
                                     <>
@@ -141,14 +141,14 @@ export function Header() {
                                             ))}
                                             {items.length > 3 && (
                                                 <p className="text-xs text-center text-slate-500">
-                                                    +{items.length - 3} producto{items.length - 3 > 1 ? 's' : ''} más
+                                                    {t('cart.moreProducts', { count: items.length - 3 })}
                                                 </p>
                                             )}
                                         </div>
 
                                         <div className="border-t border-white/5 px-4 py-3 flex justify-between items-center bg-white/[0.02]">
                                             <div>
-                                                <span className="text-xs text-slate-400">Subtotal</span>
+                                                <span className="text-xs text-slate-400">{t('cart.subtotal')}</span>
                                                 <p className="text-lg font-bold font-mono text-white">{subtotal.toLocaleString()}€</p>
                                             </div>
                                             <Link
@@ -157,7 +157,7 @@ export function Header() {
                                                 className="flex items-center gap-1.5 px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary text-sm font-semibold rounded-lg transition-colors"
                                             >
                                                 <Maximize2 className="w-4 h-4" />
-                                                Ver carrito
+                                                {t('cart.viewCart')}
                                             </Link>
                                         </div>
                                     </>
@@ -178,7 +178,7 @@ export function Header() {
                         <button
                             className="flex items-center gap-2 h-10 px-3 rounded-xl hover:bg-white/5 transition-colors text-slate-300 hover:text-white"
                         >
-                            <span className="text-sm font-medium">Mi cuenta</span>
+                            <span className="text-sm font-medium">{t('account.title')}</span>
                             <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isAccountHover ? 'rotate-180' : ''}`} />
                         </button>
 
@@ -193,15 +193,15 @@ export function Header() {
                                 <div className="p-2 flex flex-col gap-1 relative z-10 text-left">
                                     <Link to="/orders" onClick={() => setIsAccountHover(false)} className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
                                         <Package className="h-4 w-4 opacity-70" />
-                                        Mis Pedidos
+                                        {t('account.orders')}
                                     </Link>
                                     <Link to="/shipping" onClick={() => setIsAccountHover(false)} className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
                                         <Truck className="h-4 w-4 opacity-70" />
-                                        Envíos
+                                        {t('account.shipping')}
                                     </Link>
                                     <Link to="/returns" onClick={() => setIsAccountHover(false)} className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-bold text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
                                         <RotateCcw className="h-4 w-4 opacity-70" />
-                                        Devoluciones
+                                        {t('account.returns')}
                                     </Link>
 
                                     <div className="border-t border-white/10 my-1"></div>
@@ -210,14 +210,14 @@ export function Header() {
                                         <>
                                             <Link to="/profile" onClick={() => setIsAccountHover(false)} className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-primary/20 hover:text-primary transition-colors">
                                                 <User className="h-4 w-4 opacity-70" />
-                                                Mi Perfil
+                                                {t('account.profile')}
                                             </Link>
                                             <button
                                                 onClick={() => { signOut(); setIsAccountHover(false); }}
                                                 className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors"
                                             >
                                                 <LogOut className="h-4 w-4 opacity-70" />
-                                                Cerrar sesión
+                                                {t('account.logout')}
                                             </button>
                                         </>
                                     ) : (
@@ -226,7 +226,7 @@ export function Header() {
                                             className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-300 hover:bg-primary/20 hover:text-primary transition-colors"
                                         >
                                             <LogIn className="h-4 w-4 opacity-70" />
-                                            Iniciar sesión
+                                            {t('account.login')}
                                         </button>
                                     )}
                                 </div>

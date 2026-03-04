@@ -3,10 +3,12 @@ import { X, Trash2, ShoppingBag, ArrowRight, Minus, Plus, Maximize2 } from 'luci
 import { useCart } from '../../context/CartContext';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../common/Button';
+import { useTranslation } from 'react-i18next';
 
 export function CartDrawer() {
     const { items, isOpen, toggleCart, removeItem, updateQuantity, subtotal, clearCart } = useCart();
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     return (
         <AnimatePresence>
@@ -33,17 +35,17 @@ export function CartDrawer() {
                         <div className="flex items-center justify-between p-6 border-b border-white/5">
                             <h2 className="text-xl font-bold text-white flex items-center gap-2">
                                 <ShoppingBag className="w-5 h-5 text-primary" />
-                                Tu Cesta
+                                {t('cart.title')}
                             </h2>
                             <div className="flex items-center gap-4">
                                 {items.length > 0 && (
                                     <button
                                         onClick={clearCart}
                                         className="text-xs font-medium text-red-400 hover:text-red-300 transition-colors flex items-center gap-1"
-                                        title="Vaciar todo"
+                                        title={t('cart.clearAll')}
                                     >
                                         <Trash2 className="w-4 h-4" />
-                                        <span className="hidden sm:inline">Vaciar</span>
+                                        <span className="hidden sm:inline">{t('cart.clear')}</span>
                                     </button>
                                 )}
                                 <div className="flex items-center gap-1 border-l border-white/10 pl-4">
@@ -53,14 +55,14 @@ export function CartDrawer() {
                                             navigate('/cart');
                                         }}
                                         className="p-2 text-slate-400 hover:text-white transition-colors"
-                                        title="Ampliar a pantalla completa"
+                                        title={t('cart.maximize')}
                                     >
                                         <Maximize2 className="w-5 h-5" />
                                     </button>
                                     <button
                                         onClick={toggleCart}
                                         className="p-2 text-slate-400 hover:text-white transition-colors"
-                                        title="Cerrar carrito"
+                                        title={t('cart.close')}
                                     >
                                         <X className="w-6 h-6" />
                                     </button>
@@ -72,9 +74,9 @@ export function CartDrawer() {
                             {items.length === 0 ? (
                                 <div className="text-center py-12 text-slate-400">
                                     <ShoppingBag className="w-16 h-16 mx-auto mb-4 opacity-20" />
-                                    <p>Tu cesta está vacía.</p>
+                                    <p>{t('cart.emptyHint')}</p>
                                     <Button variant="outline" className="mt-6" onClick={toggleCart}>
-                                        Volver a la tienda
+                                        {t('cart.returnToShop')}
                                     </Button>
                                 </div>
                             ) : (
@@ -108,7 +110,7 @@ export function CartDrawer() {
                                                 <button
                                                     onClick={() => removeItem(item.id)}
                                                     className="text-red-400 hover:text-red-300 transition-colors p-1"
-                                                    title="Eliminar"
+                                                    title={t('cart.remove')}
                                                 >
                                                     <Trash2 className="w-4 h-4" />
                                                 </button>
@@ -122,13 +124,13 @@ export function CartDrawer() {
                         {items.length > 0 && (
                             <div className="p-6 border-t border-white/10 bg-white/5">
                                 <div className="flex justify-between items-center mb-6">
-                                    <span className="text-slate-400">Subtotal</span>
+                                    <span className="text-slate-400">{t('cart.subtotal')}</span>
                                     <span className="text-2xl font-bold text-white font-mono">
                                         {subtotal.toLocaleString()}€
                                     </span>
                                 </div>
                                 <Button className="w-full py-6 text-lg group">
-                                    Tramitar Pedido
+                                    {t('cart.checkout')}
                                     <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                                 </Button>
                             </div>

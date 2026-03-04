@@ -166,5 +166,54 @@
             "priceAsc": "Precio: Menor primero",
             "priceDesc": "Precio: Mayor primero"
         }
+    },
+    "account": {
+        "title": "Mi cuenta",
+        "orders": "Mis Pedidos",
+        "shipping": "Envíos",
+        "returns": "Devoluciones",
+        "profile": "Mi Perfil",
+        "logout": "Cerrar sesión",
+        "login": "Iniciar sesión"
+    },
+    "contact": {
+        "title": "Contacto",
+        "quote": "Presupuesto personalizado",
+        "guide": "Guía de CuencaSolar",
+        "form": "Formulario de contacto",
+        "call": "Llamar a CuencaSolar",
+        "faq": "FAQ (Preguntas Frecuentes)"
+    },
+    "cart": {
+        "title": "Tu Cesta",
+        "emptyTitle": "Tu cesta está vacía",
+        "emptyHint": "Tu cesta está vacía.",
+        "moreProducts": "+{{count}} producto(s) más",
+        "subtotal": "Subtotal",
+        "viewCart": "Ver carrito",
+        "clearAll": "Vaciar todo",
+        "clear": "Vaciar",
+        "close": "Cerrar carrito",
+        "maximize": "Ampliar a pantalla completa",
+        "returnToShop": "Volver a la tienda",
+        "remove": "Eliminar",
+        "checkout": "Tramitar Pedido",
+        "pageTitle": "Tu Carrito",
+        "pageDesc": "Revisa tus productos antes de finalizar la compra.",
+        "pageEmptyTitle": "Tu carrito está vacío",
+        "pageEmptyDesc": "No tienes ningún sistema solar en tu carrito. Descubre nuestra gama de productos y empieza a ahorrar hoy mismo.",
+        "exploreCatalog": "Explorar Catálogo",
+        "productsCount": "Productos ({{count}})",
+        "clearCartPage": "Vaciar Carrito",
+        "orderSummary": "Resumen de Pedido",
+        "shipping": "Envío",
+        "free": "Gratis",
+        "taxes": "Impuestos",
+        "calculatedAtCheckout": "Calculados en el checkout",
+        "total": "Total",
+        "financingFrom": "Financiación disponible desde ~{{amount}}€/mes",
+        "proceedToCheckout": "Proceder al Checkout",
+        "securePayment": "Pago 100% seguro y encriptado",
+        "premiumSupport": "Soporte técnico premium incluido"
     }
 }
