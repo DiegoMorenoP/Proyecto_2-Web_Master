@@ -1,0 +1,390 @@
+import { useState, useMemo, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Search, Filter, ArrowUpDown } from 'lucide-react';
+import type { Kit } from '../../types';
+import { CatalogService } from './CatalogService';
+import { KitCard } from './KitCard';
+import { useTranslation } from 'react-i18next';
+import { ProductDetailInline } from './ProductDetailInline';
+import { useCart } from '../../context/CartContext';
+import { b2bCategories } from '../../config/navigation';
+import { Loader2 } from 'lucide-react';
+import { Layout } from '../../components/layout/Layout';
+
+export function CatalogPage() {
+    const [kits, setKits] = useState<Kit[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    const [searchTerm, setSearchTerm] = useState('');
+    const { t } = useTranslation();
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    // Get initial category from URL or default to 'all'
+    const urlCategory = searchParams.get('category') || 'all';
+    const [selectedType, setSelectedType] = useState<string>(urlCategory);
+    const urlSubcategory = searchParams.get('sub') || 'all';
+    const [selectedSubtype, setSelectedSubtype] = useState<string>(urlSubcategory);
+    const [sortOrder, setSortOrder] = useState<'price_asc' | 'price_desc' | 'power_stats'>('power_stats');
+    const [showOnlyInStock, setShowOnlyInStock] = useState(false);
+
+    useEffect(() => {
+        async function loadKits() {
+            try {
+                const data = await CatalogService.getAllCatalog();
+                setKits(data);
+            } finally {
+                setIsLoading(false);
+            }
+        }
+        loadKits();
+    }, []);
+
+    // Also sync URL if it changes outside
+    useEffect(() => {
+        setSelectedType(searchParams.get('category') || 'all');
+        setSelectedSubtype(searchParams.get('sub') || 'all');
+    }, [searchParams]);
+
+    const filteredKits = useMemo(() => {
+        let result = [...kits];
+
+        // 1. Text Search
+        if (searchTerm) {
+            const lower = searchTerm.toLowerCase();
+            result = result.filter(k =>
+                k.name.toLowerCase().includes(lower) ||
+                (k.description || '').toLowerCase().includes(lower)
+            );
+        }
+
+        // 2. Type/Category Filter
+        if (selectedType !== 'all') {
+            result = result.filter(k => k.category_slug === selectedType || k.type === selectedType);
+        }
+
+        // 2.5 Subcategory Filter
+        if (selectedSubtype !== 'all') {
+            result = result.filter(k => k.subcategory_slug === selectedSubtype);
+        }
+
+        // 3. Stock Filter
+        if (showOnlyInStock) {
+            result = result.filter(k => k.stock_status !== 'out_of_stock');
+        }
+
+        // 4. Sorting
+        result.sort((a, b) => {
+            if (sortOrder === 'price_asc') return a.price - b.price;
+            if (sortOrder === 'price_desc') return b.price - a.price;
+            if (sortOrder === 'power_stats') return (b.total_power || 0) - (a.total_power || 0);
+            return 0;
+        });
+
+        return result;
+    }, [kits, searchTerm, selectedType, selectedSubtype, sortOrder, showOnlyInStock]);
+
+    // Expansion Logic
+    const [expandedProductId, setExpandedProductId] = useState<string | null>(null);
+    const { addItem } = useCart();
+
+    // Columns logic for inline detail
+    const [modalColumns, setModalColumns] = useState(5);
+
+    useEffect(() => {
+        const updateColumns = () => {
+            if (window.matchMedia('(min-width: 1280px)').matches) {
+                setModalColumns(5);
+            } else if (window.matchMedia('(min-width: 1024px)').matches) {
+                setModalColumns(4);
+            } else if (window.matchMedia('(min-width: 640px)').matches) {
+                setModalColumns(2);
+            } else {
+                setModalColumns(1);
+            }
+        };
+
+        updateColumns();
+        window.addEventListener('resize', updateColumns);
+        return () => window.removeEventListener('resize', updateColumns);
+    }, []);
+
+    useEffect(() => {
+        if (expandedProductId) {
+            setTimeout(() => {
+                const element = document.getElementById(`item-container-${expandedProductId}`);
+                if (element) {
+                    // With a fixed header, we might want to offset the scroll
+                    const headerOffset = 100;
+                    const elementPosition = element.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: "smooth"
+                    });
+                }
+            }, 800);
+        }
+    }, [expandedProductId]);
+
+    const renderGridWithExpansion = () => {
+        const items = [];
+        const expandedIndex = filteredKits.findIndex(k => k.id === expandedProductId);
+
+        let insertIndex = -1;
+        let expandedRowNumber = -1;
+
+        if (expandedIndex !== -1) {
+            expandedRowNumber = Math.floor(expandedIndex / modalColumns);
+            insertIndex = (expandedRowNumber + 1) * modalColumns - 1;
+        }
+
+        for (let i = 0; i < filteredKits.length; i++) {
+            const kit = filteredKits[i];
+            const currentRow = Math.floor(i / modalColumns);
+            const isCompactRow = currentRow === expandedRowNumber;
+
+            const isKitCardCompact = true;
+            let cardHeightClass = "h-[250px]";
+            let cardHeightValue: number | 'auto' = 250;
+
+            if (isCompactRow) {
+                cardHeightClass = "h-[110px]";
+                cardHeightValue = 110;
+            }
+
+            items.push(
+                <motion.div
+                    key={kit.id}
+                    id={`item-container-${kit.id}`}
+                    layout="position"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{
+                        opacity: 1,
+                        scale: 1,
+                        height: cardHeightValue
+                    }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
+                    className={cardHeightClass}
+                >
+                    <KitCard
+                        kit={kit}
+                        compact={isKitCardCompact}
+                        onViewDetails={() => setExpandedProductId(expandedProductId === kit.id ? null : kit.id)}
+                    />
+                </motion.div>
+            );
+
+            const isEndOfRow = i === insertIndex;
+            const isLastItem = i === filteredKits.length - 1;
+
+            if (expandedIndex !== -1 && (isEndOfRow || (isLastItem && i < insertIndex))) {
+                const expandedKit = filteredKits[expandedIndex];
+
+                const colSpanClass = "col-span-1 sm:col-span-2 lg:col-span-4 xl:col-span-5";
+
+                items.push(
+                    <div key={`details-${expandedKit.id}`} className={`${colSpanClass} w-full mt-4 mb-8`}>
+                        <ProductDetailInline
+                            product={expandedKit}
+                            onClose={() => setExpandedProductId(null)}
+                            onAddToCart={(p) => {
+                                addItem(p);
+                                setExpandedProductId(null);
+                            }}
+                        />
+                    </div>
+                );
+                insertIndex = -2;
+            }
+        }
+        return items;
+    };
+
+    const tabs = [
+        { id: 'all', label: t('catalog.tabs.all') },
+        { id: 'kits-solares', label: 'Kits Solares' },
+        { id: 'paneles-solares', label: 'Paneles' },
+        { id: 'inversores', label: 'Inversores' },
+        { id: 'baterias-solares', label: 'Baterías' },
+        { id: 'accesorios', label: 'Accesorios' },
+        { id: 'reguladores', label: 'Reguladores' }
+    ];
+
+    const handleTabChange = (tabId: string) => {
+        setSelectedType(tabId);
+        setSelectedSubtype('all');
+        if (tabId === 'all') {
+            searchParams.delete('category');
+        } else {
+            searchParams.set('category', tabId);
+        }
+        searchParams.delete('sub');
+        setSearchParams(searchParams);
+    };
+
+    const handleSubTabChange = (subId: string) => {
+        setSelectedSubtype(subId);
+        if (subId === 'all') {
+            searchParams.delete('sub');
+        } else {
+            searchParams.set('sub', subId);
+        }
+        setSearchParams(searchParams);
+    };
+
+    const activeCategoryConfig = b2bCategories.find(c => {
+        return c.href.includes(`catalog=${selectedType}`) || c.href.includes(`category=${selectedType}`);
+    });
+
+    const activeSubcategories = activeCategoryConfig?.items.map(item => {
+        const subMatch = item.href.match(/sub=([^&]+)/);
+        return {
+            id: subMatch ? subMatch[1] : item.name.toLowerCase().replace(/ /g, '-'),
+            label: item.name
+        };
+    }).filter(sub => !sub.id.includes('calculadora')) || [];
+
+    return (
+        <Layout>
+            <div className="min-h-screen bg-zinc-950 pt-24 pb-12 flex flex-col">
+                <div className="container mx-auto px-4 w-full h-full flex flex-col max-w-[100vw] sm:max-w-[100vw] lg:px-12">
+
+                    {/* Header Controls */}
+                    <div className="mb-6 flex flex-col gap-4 z-20 shrink-0">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <h1 className="text-3xl font-bold text-white mb-2">{t('catalog.modal.title')}</h1>
+                                <p className="text-slate-400 text-base">{t('catalog.modal.subtitle')}</p>
+                            </div>
+                        </div>
+
+                        {/* Filters & Sorting First Row */}
+                        <div className="flex flex-col md:flex-row gap-4 justify-between items-center z-10 w-full">
+                            <div className="relative w-full md:w-96 group">
+                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-primary transition-colors" />
+                                <input
+                                    type="text"
+                                    placeholder={t('catalog.modal.searchPlaceholder')}
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    className="w-full bg-black/40 border border-white/10 rounded-xl py-2.5 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-primary/50 transition-colors placeholder:text-slate-600"
+                                />
+                            </div>
+
+                            <div className="flex items-center gap-3 w-full md:w-auto overflow-x-auto pb-2 md:pb-0">
+                                {/* Stock Filter Toggle */}
+                                <button
+                                    onClick={() => setShowOnlyInStock(!showOnlyInStock)}
+                                    className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all border ${showOnlyInStock
+                                        ? 'bg-emerald-500/10 border-emerald-500/50 text-emerald-500'
+                                        : 'bg-black/40 border-white/10 text-slate-400 hover:border-white/20 hover:text-white'
+                                        }`}
+                                >
+                                    <div className={`w-2 h-2 rounded-full ${showOnlyInStock ? 'bg-emerald-500' : 'bg-slate-500'}`} />
+                                    En Stock
+                                </button>
+
+                                <div className="relative group/sort">
+                                    <select
+                                        value={sortOrder}
+                                        onChange={(e) => setSortOrder(e.target.value as any)}
+                                        className="appearance-none bg-black/40 border border-white/10 text-slate-300 text-xs font-medium rounded-xl py-2 pl-4 pr-8 hover:border-white/20 focus:outline-none focus:border-primary/50 cursor-pointer h-[38px]"
+                                    >
+                                        <option value="power_stats">{t('catalog.sort.powerStats')}</option>
+                                        <option value="price_asc">{t('catalog.sort.priceAsc')}</option>
+                                        <option value="price_desc">{t('catalog.sort.priceDesc')}</option>
+                                    </select>
+                                    <ArrowUpDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3 h-3 text-slate-500 pointer-events-none" />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Categories & Subcategories Second Row */}
+                        <div className="flex flex-col gap-2 w-full mt-2">
+                            <div className="flex p-1 bg-black/40 rounded-xl border border-white/5 w-max">
+                                {tabs.map(tab => (
+                                    <button
+                                        key={tab.id}
+                                        onClick={() => handleTabChange(tab.id)}
+                                        className={`px-4 py-1.5 rounded-lg text-xs font-medium transition-all whitespace-nowrap ${selectedType === tab.id
+                                            ? 'bg-primary text-primary-foreground shadow-lg'
+                                            : 'text-slate-400 hover:text-white hover:bg-white/5'
+                                            }`}
+                                    >
+                                        {tab.label}
+                                    </button>
+                                ))}
+                            </div>
+
+                            {/* Subcategories Row */}
+                            <AnimatePresence>
+                                {selectedType !== 'all' && activeSubcategories.length > 0 && (
+                                    <motion.div
+                                        initial={{ opacity: 0, height: 0, marginTop: -8 }}
+                                        animate={{ opacity: 1, height: 'auto', marginTop: 0 }}
+                                        exit={{ opacity: 0, height: 0, marginTop: -8 }}
+                                        className="flex flex-wrap gap-2 p-1 bg-transparent rounded-xl w-max ml-1"
+                                    >
+                                        <button
+                                            onClick={() => handleSubTabChange('all')}
+                                            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all whitespace-nowrap ${selectedSubtype === 'all'
+                                                ? 'bg-white/10 text-white shadow-sm border border-white/10'
+                                                : 'text-slate-500 hover:text-white hover:bg-white/5'
+                                                }`}
+                                        >
+                                            Todas
+                                        </button>
+                                        {activeSubcategories.map(sub => (
+                                            <button
+                                                key={sub.id}
+                                                onClick={() => handleSubTabChange(sub.id)}
+                                                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all whitespace-nowrap ${selectedSubtype === sub.id
+                                                    ? 'bg-white/10 text-white shadow-sm border border-white/10'
+                                                    : 'text-slate-500 hover:text-white hover:bg-white/5'
+                                                    }`}
+                                            >
+                                                {sub.label}
+                                            </button>
+                                        ))}
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
+                    </div>
+
+                    {/* Content Grid */}
+                    <div className="flex-1 w-full mt-4">
+                        {isLoading ? (
+                            <div className="h-[400px] flex flex-col items-center justify-center text-slate-500 gap-4">
+                                <Loader2 className="w-8 h-8 text-primary animate-spin" />
+                            </div>
+                        ) : filteredKits.length > 0 ? (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6 pb-20 auto-rows-auto">
+                                <AnimatePresence mode="popLayout" initial={false}>
+                                    {renderGridWithExpansion()}
+                                </AnimatePresence>
+                            </div>
+                        ) : (
+                            <div className="h-[400px] flex flex-col items-center justify-center text-slate-500 gap-4">
+                                <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center">
+                                    <Filter className="w-8 h-8 opacity-50" />
+                                </div>
+                                <p>{t('catalog.modal.noResults')}</p>
+                                <button
+                                    onClick={() => { setSearchTerm(''); setSelectedType('all'); }}
+                                    className="text-primary hover:underline text-sm"
+                                >
+                                    {t('catalog.modal.clearFilters')}
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
+        </Layout>
+    );
+}
+

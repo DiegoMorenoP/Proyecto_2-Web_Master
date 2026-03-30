@@ -18,6 +18,7 @@ import { LeadFormModal } from './components/common/LeadFormModal';
 import { HeroSection } from './components/layout/HeroSection';
 import { TestimonialsSection } from './components/trust/TestimonialsSection';
 import { CatalogSection } from './features/catalog/CatalogSection';
+import { CatalogPage } from './features/catalog/CatalogPage';
 import { OrdersPage } from './features/account/pages/OrdersPage';
 import { ShippingPage } from './features/account/pages/ShippingPage';
 import { ReturnsPage } from './features/account/pages/ReturnsPage';
@@ -143,6 +144,7 @@ function App() {
             <Route path="/update-password" element={<UpdatePasswordPage />} />
             <Route path="/product/:id" element={<ProductDetailPage />} />
             <Route path="/cart" element={<CartPage />} />
+            <Route path="/catalogo" element={<CatalogPage />} />
             <Route path="/categoria/:categorySlug" element={
               <Layout>
                 <div className="container mx-auto px-4 py-24 min-h-screen">

@@ -2,7 +2,7 @@ import { useState, useMemo, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, X, Filter, ArrowUpDown, Maximize2, Minimize2 } from 'lucide-react';
+import { Search, X, Filter, ArrowUpDown, ExternalLink } from 'lucide-react';
 import type { Kit } from '../../types';
 import { KitCard } from './KitCard';
 import { useTranslation } from 'react-i18next';
@@ -20,7 +20,7 @@ interface CatalogueModalProps {
 
 export function CatalogueModal({ isOpen, onClose, kits, initialExpandedId }: CatalogueModalProps) {
     const [searchTerm, setSearchTerm] = useState('');
-    const [isMaximized, setIsMaximized] = useState(false);
+    const isMaximized = true; // Always true now as per requirements
     const { t } = useTranslation();
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -120,35 +120,22 @@ export function CatalogueModal({ isOpen, onClose, kits, initialExpandedId }: Cat
 
     useEffect(() => {
         const updateColumns = () => {
-            if (isMaximized) {
-                // When maximized, we want a wider layout (up to 5 columns on large screens)
-                if (window.matchMedia('(min-width: 1280px)').matches) {
-                    setModalColumns(5); // xl forces 5
-                } else if (window.matchMedia('(min-width: 1024px)').matches) {
-                    setModalColumns(4); // lg forces 4
-                } else if (window.matchMedia('(min-width: 640px)').matches) {
-                    setModalColumns(2); // sm forces 2
-                } else {
-                    setModalColumns(1);
-                }
+            // When maximized, we want a wider layout (up to 5 columns on large screens)
+            if (window.matchMedia('(min-width: 1280px)').matches) {
+                setModalColumns(5); // xl forces 5
+            } else if (window.matchMedia('(min-width: 1024px)').matches) {
+                setModalColumns(4); // lg forces 4
+            } else if (window.matchMedia('(min-width: 640px)').matches) {
+                setModalColumns(2); // sm forces 2
             } else {
-                // Normal modal width (max-w-6xl)
-                if (window.matchMedia('(min-width: 1280px)').matches) {
-                    setModalColumns(4); // xl
-                } else if (window.matchMedia('(min-width: 1024px)').matches) {
-                    setModalColumns(3); // lg
-                } else if (window.matchMedia('(min-width: 640px)').matches) {
-                    setModalColumns(2); // sm
-                } else {
-                    setModalColumns(1);
-                }
+                setModalColumns(1);
             }
         };
 
         updateColumns();
         window.addEventListener('resize', updateColumns);
         return () => window.removeEventListener('resize', updateColumns);
-    }, [isMaximized]);
+    }, []);
 
     // Scroll to expanded item
     useEffect(() => {
@@ -337,8 +324,7 @@ export function CatalogueModal({ isOpen, onClose, kits, initialExpandedId }: Cat
                                 animate={{ opacity: 1, scale: 1, y: 0 }}
                                 exit={{ opacity: 0, scale: 0.95, y: 20 }}
                                 onClick={(e) => e.stopPropagation()}
-                                className={`relative w-full bg-zinc-950 border border-white/10 shadow-2xl overflow-hidden flex flex-col transition-all duration-300 ${isMaximized ? 'max-w-[100vw] h-screen rounded-none' : 'max-w-6xl max-h-[90vh] rounded-3xl'
-                                    }`}
+                                className={`relative w-full bg-zinc-950 border border-white/10 shadow-2xl overflow-hidden flex flex-col transition-all duration-300 max-w-[100vw] h-screen rounded-none`}
                             >
                                 {/* Header */}
                                 <div className="p-6 border-b border-white/10 bg-black/20 backdrop-blur-xl flex flex-col gap-4 z-20 shrink-0">
@@ -348,13 +334,15 @@ export function CatalogueModal({ isOpen, onClose, kits, initialExpandedId }: Cat
                                             <p className="text-slate-400 text-sm">{t('catalog.modal.subtitle')}</p>
                                         </div>
                                         <div className="flex items-center gap-2">
-                                            <button
-                                                onClick={() => setIsMaximized(!isMaximized)}
-                                                className="p-2 rounded-full hover:bg-white/10 transition-colors text-slate-400 hover:text-white"
-                                                title={isMaximized ? "Restaurar" : "Maximizar"}
+                                            <a
+                                                href={`/catalogo?${searchParams.toString()}`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="p-2 rounded-full hover:bg-white/10 transition-colors text-slate-400 hover:text-white flex items-center justify-center"
+                                                title="Abrir en nueva pestaña"
                                             >
-                                                {isMaximized ? <Minimize2 className="w-6 h-6" /> : <Maximize2 className="w-6 h-6" />}
-                                            </button>
+                                                <ExternalLink className="w-5 h-5" />
+                                            </a>
                                             <button
                                                 onClick={onClose}
                                                 className="p-2 rounded-full hover:bg-white/10 transition-colors text-slate-400 hover:text-white"
@@ -461,7 +449,7 @@ export function CatalogueModal({ isOpen, onClose, kits, initialExpandedId }: Cat
                                 {/* Content Grid */}
                                 <div className="flex-1 overflow-y-auto p-6 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent bg-zinc-950/50">
                                     {filteredKits.length > 0 ? (
-                                        <div className={`grid grid-cols-1 sm:grid-cols-2 ${isMaximized ? 'lg:grid-cols-4 xl:grid-cols-5' : 'lg:grid-cols-3 xl:grid-cols-4'} gap-6 pb-20 auto-rows-auto`}>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-6 pb-20 auto-rows-auto">
                                             <AnimatePresence mode="popLayout" initial={false}>
                                                 {renderGridWithExpansion()}
                                             </AnimatePresence>
